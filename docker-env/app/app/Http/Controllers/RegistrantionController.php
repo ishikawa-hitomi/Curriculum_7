@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Tag;
+use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateData;
+use App\Http\Requests\UserData;
 use App\Http\Requests;
 
 class RegistrantionController extends Controller
@@ -27,6 +30,8 @@ class RegistrantionController extends Controller
         foreach($columns as $column){
             $recipe->$column=$request->$column;
         }
+        $image_path=$request->file('main_image')->store('public');
+        $recipe->main_image=basename($image_path);
         Auth::user()->recipe()->save($recipe);
         return redirect('/');
     }
@@ -46,16 +51,13 @@ class RegistrantionController extends Controller
         foreach($columns as $column){
             $tag->$column=$request->$column;
         }
-        Auth::user()->recipe()->save($tag);
+        $tag->save();
         return redirect('/recipe_create');
     }
 
     //ここから投稿編集
     public function recipe_edit_form(Recipe $recipe){
         $result=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
-        if(is_null($result)){
-            abort(404);
-        }
         $tag=new Tag;
         $tags=$tag->all()->toArray();
         return view('recipe_edit_form',[
@@ -65,10 +67,16 @@ class RegistrantionController extends Controller
     }
 
     public function recipe_edit(Recipe $recipe,CreateData $request){
-        $columns=['main_image','display_title','title','time','serve','tag_id','memo'];
+        $columns=['display_title','title','time','serve','tag_id','memo'];
         foreach($columns as $column){
             $recipe->$column=$request->$column;
         }
+        $image_path=$request->file('main_image');
+        if(isset($image_path)){
+            \Storage::disk('public')->delete($image_path);
+        }
+        $image_path=$image_path->store('public');
+        $recipe->main_image=basename($image_path);
         Auth::user()->recipe()->save($recipe);
         return redirect('/');
     }
@@ -88,5 +96,62 @@ class RegistrantionController extends Controller
         }
         Auth::user()->recipe()->save($recipe);
         return redirect('/');
+    }
+
+    //ここからプロフィール情報編集
+    public function profile_edit_form(User $user){
+        $users=$user->where('id','=',$user['id'])->get()->toArray();
+        return view('profile_edit_form',[
+            'users'=>$users,
+        ]);
+    }
+
+    public function profile_edit(User $user,Request $request){
+        $columns=['profile'];
+        foreach($columns as $column){
+            $user->$column=$request->$column;
+        }
+        $image_path=$request->file('icon');
+        if(isset($image_path)){
+            \Storage::disk('public')->delete($image_path);
+        }
+        $image_path=$image_path->store('public');
+        $user->icon=basename($image_path);
+        $user->save();
+        return redirect('/my_page/'.$user['id']);
+    }
+
+    //ここからユーザー情報編集
+    public function user_edit_form(User $user){
+        $users=$user->where('id','=',$user['id'])->get()->toArray();
+        return view('user_edit_form',[
+            'users'=>$users,
+        ]);
+    }
+
+    public function user_edit(User $user,UserData $request){
+        $columns=['name','email'];
+        foreach($columns as $column){
+            $user->$column=$request->$column;
+        }
+        $user->save();
+        return redirect('/my_page/'.$user['id']);
+    }
+
+    //ここからアカウント削除
+    public function user_delete_form(User $user){
+        $users=$user->where('id','=',$user['id'])->get()->toArray();
+        return view('user_delete_form',[
+            'users'=>$users,
+        ]);
+    }
+
+    public function user_delete(User $user,Request $request){
+        $columns=['name','email'];
+        foreach($columns as $column){
+            $user->$column=$request->$column;
+        }
+        $user->save();
+        return redirect('/my_page/'.$user['id']);
     }
 }

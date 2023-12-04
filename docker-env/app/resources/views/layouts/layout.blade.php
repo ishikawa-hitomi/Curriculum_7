@@ -27,44 +27,48 @@
 </head>
 <body>
   <header>
-  @if(Auth::check())
-    <span class="my-navbar-item">{{Auth::user()->name}}</span>
-    /
-    <a href="#" id="logout" class="my-navbar-item">ログアウト</a>
-    <a href="{{route('index')}}">main</a>
-    <form action="{{route('logout')}}" method="post" style="display:none;" id="logout-form">
-        @csrf
-    </form>
-    <script>
-        document.getElementById('logout').addEventListener('click',function(event){
-            event.preventDefault();
-            document.getElementById('logout-form').submit();
-        });
-    </script>
-  @else
-        <a href="{{route('login')}}" class="my-navbar-item">ログイン</a>
-        /
-        <a href="{{route('register')}}" class="my-navbar-item">会員登録</a>
-  @endif
+    @if(Auth::check())
+      <span class="my-navbar-item">{{Auth::user()->name}}</span>
+      /
+      <a href="#" id="logout" class="my-navbar-item">ログアウト</a>
+      <a href="{{route('index')}}">main</a>
+      <form action="{{route('logout')}}" method="post" style="display:none;" id="logout-form">
+          @csrf
+      </form>
+      <script>
+          document.getElementById('logout').addEventListener('click',function(event){
+              event.preventDefault();
+              document.getElementById('logout-form').submit();
+          });
+      </script>
+    @else
+          <a href="{{route('login')}}" class="my-navbar-item">ログイン</a>
+          /
+          <a href="{{route('register')}}" class="my-navbar-item">会員登録</a>
+    @endif
   </header>
-  <div class="main">
-  <div class="main-content">
-    @yield('content')
-  </div>
+  <div class="main container-fluid">
+    <div class="row">
+    <div class="left-content col-md-4 bg-success">
+        <div>
+          <a href="{{route('recipe_create')}}">
+            <button type='button'>新規投稿</button>
+          </a>
+          <a href="{{route('my_page',['user'=>Auth::user()->id])}}">
+            <button type='button'>マイページ</button>
+          </a>
+        </div>
+        左
+      </div>
 
-  <div class="right-content">
-    右
-  </div>
-  </div>
+      <div class="main-content col-md-7">
+        @yield('content')
+      </div>
 
-  <div class="left-content">
-    <div>
-    <a href="{{route('recipe_create')}}">
-      <button type='button'>新規投稿</button>
-    </a>
-  </div>
-    左
-  </div>
+      <div class="right-content col-md-1 bg-info">
+        右
+      </div>
+    </div>
   </div>
 </body>
 </html>
