@@ -1,0 +1,83 @@
+@extends('layouts.layout')
+@section('content')
+  <div class="card">
+    <h4 class="card-title">材料・分量登録</h4>
+    @if($errors->any())
+      <ul>
+        @foreach($errors->all() as $message)
+          <li>{{$message}}</li>
+        @endforeach
+      </ul>
+    @endif
+    <div class="card-body">
+      @foreach($recipes as $recipe)
+        <form action="{{route('ingredient_edit',['recipe'=>$recipe['id']])}}" method="post" class="was-validated form-inline" novalidate>
+      @endforeach
+        @csrf
+        <a onclick="add()" class="btn btn-sm btn-light">+追加</a>
+        @foreach($recipes as $recipe)
+          <div id="input_plural">
+            <div class="card-group">
+              <div class="card">
+                <lavel for='name' class="form-label">材料</lavel>
+                <input type='text' name='name' class="form-control" value="{{$recipe['name']}}" placeholder="卵" required>
+                <div class="invalid-feedback">
+                  材料の入力は必須です
+                </div>
+              </div>
+              <div class="card">
+              <lavel for='quantity' class="form-label">材料</lavel>
+                <input type='text' name='quantity' class="form-control" value="{{$recipe['quantity']}}" placeholder="1個" required>
+                <div class="invalid-feedback">
+                  分量の入力は必須です
+                </div>
+              </div>
+            </div>
+          </div>
+        @endforeach
+        <div>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipe['recipe_id']}}" required>
+        </div>
+        <input type='submit' class="btn btn-primary">
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let inputPlural = document.getElementById('input_plural');
+    var count = 2;
+
+    function add() {
+      let newDiv = document.createElement('DIV');
+      newDiv.classList.add('card-group');
+      newDiv.id = 'sub-plural';
+
+      let div1 = document.createElement('DIV');
+      div1.classList.add('card');
+      newDiv.appendChild(div1);
+
+      var input1 = document.createElement('INPUT');
+      input1.classList.add('form-control');
+      input1.setAttribute('name', 'name[]');
+      div1.appendChild(input1);
+
+      let div2 = document.createElement('DIV');
+      div2.classList.add('card');
+      newDiv.appendChild(div2);
+
+      var input2 = document.createElement('INPUT');
+      input2.classList.add('form-control');
+      input2.setAttribute('name', 'quantity[]');
+      div2.appendChild(input2);
+
+      var input = document.createElement('INPUT');
+      input.setAttribute('type', 'button');
+      input.setAttribute('value', '削除');
+      input.setAttribute('onclick', 'del(this)');
+      newDiv.appendChild(input);
+
+      inputPlural.appendChild(newDiv);
+      count++;
+    }
+  </script>
+@endsection

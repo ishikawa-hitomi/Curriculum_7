@@ -7,6 +7,8 @@ use App\Models\Recipe;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Step;
+use App\Models\Ingredient;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,22 +16,25 @@ class DisplayController extends Controller
 {
     public function index(){
         $recipe=new Recipe;
-        $recipes=$recipe->where('del_flg','=',1)->get()->toArray();
-        $user=new User;
-        $users=$user->where('del_flg','=',1)->get()->toArray();
-        var_dump($users);
+        $recipes=$recipe->select('recipes.id as recipe_id','recipes.main_image','recipes.display_title','recipes.user_id','users.name')->where('recipes.del_flg','=','1')->where('users.del_flg','=','1')->join('users','recipes.user_id','=','users.id')->get()->toArray();
         return view('main',
         [
             'recipes'=>$recipes,
-            'users'=>$users,
         ]);
     }
 
     public function my_post(Recipe $recipe){
         $recipes=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
+        $ingredient=new Ingredient;
+        $ingredients=$ingredient->where('recipe_id','=',$recipe['id'])->get()->toArray();
+        $step=new Step;
+        $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
+        var_dump($steps);
         return view('my_post',
         [
             'recipes'=>$recipes,
+            'ingredients'=>$ingredients,
+            'steps'=>$steps,
         ]);
     }
 
@@ -37,10 +42,16 @@ class DisplayController extends Controller
         $recipes=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
         $user=new User;
         $users=$user->where('id','=',$recipe['user_id'])->get()->toArray();
+        $ingredient=new Ingredient;
+        $ingredients=$ingredient->where('recipe_id','=',$recipe['id'])->get()->toArray();
+        $step=new Step;
+        $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
         return view('others_post',
         [
             'recipes'=>$recipes,
             'users'=>$users,
+            'ingredients'=>$ingredients,
+            'steps'=>$steps,
         ]);
     }
 

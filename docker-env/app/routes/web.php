@@ -44,6 +44,18 @@ Route::group(['middleware'=>'auth'],function(){
 
     Route::get('/user_delete/{user}',[RegistrantionController::class,'user_delete_form'])->name('user_delete');
     Route::post('/user_delete/{user}',[RegistrantionController::class,'user_delete']);
+
+    Route::get('/ingredient_create/{recipe}',[RegistrantionController::class,'ingredient_create_form'])->name('ingredient_create');
+    Route::post('/ingredient_create/{recipe}',[RegistrantionController::class,'ingredient_create']);
+
+    Route::get('/step_create/{recipe}',[RegistrantionController::class,'step_create_form'])->name('step_create');
+    Route::post('/step_create/{recipe}',[RegistrantionController::class,'step_create']);
+
+    Route::get('/ingredient_edit/{recipe}',[RegistrantionController::class,'ingredient_edit_form'])->name('ingredient_edit');
+    Route::post('/ingredient_edit/{recipe}',[RegistrantionController::class,'ingredient_edit']);
+
+    Route::get('/step_edit/{recipe}',[RegistrantionController::class,'step_edit_form'])->name('step_edit');
+    Route::post('/step_edit/{recipe}',[RegistrantionController::class,'step_edit']);
 });
 
 Auth::routes();

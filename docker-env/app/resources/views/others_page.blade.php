@@ -4,7 +4,11 @@
     @foreach($users as $user)
         <h4 class="card-title">{{$user['name']}}</h4>
       <div class="card-body">
+        @if($user['icon']===null)
+        <img class="" src="{{asset('download20231202123050.png') }}">
+        @else
         <img class="" src="{{asset('storage/' . $user['icon']) }}">
+        @endif
         <p>{{$user['profile']}}</p>
       </div>
     @endforeach

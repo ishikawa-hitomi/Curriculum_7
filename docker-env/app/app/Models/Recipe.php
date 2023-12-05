@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Recipe extends Model
 {
@@ -13,5 +14,14 @@ class Recipe extends Model
 
     public function tag(){
         return $this->belongsTo('App\Models\Tag','tag_id','id');
+    }
+    public function user(){
+        return $this->belongsTo('App\Models\User','user_id','id');
+    }
+    public function ingredient(){
+        return $this->hasMany('App\Models\Ingredient','id','recipe_id');
+    }
+    public function step(){
+        return $this->hasMany('App\Models\Step','id','recipe_id');
     }
 }
