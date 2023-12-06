@@ -18,14 +18,14 @@
           <div class="card-group">
             <div class="card">
               <lavel for='name' class="form-label">材料</lavel>
-              <input type='text' name='name[]' class="form-control" value="{{old('name')}}" placeholder="卵" required>
+              <input type='text' name='name' class="form-control" value="{{old('name')}}" placeholder="卵" required>
               <div class="invalid-feedback">
                 材料の入力は必須です
               </div>
             </div>
             <div class="card">
             <lavel for='quantity' class="form-label">材料</lavel>
-              <input type='text' name='quantity[]' class="form-control" value="{{old('quantity')}}" placeholder="1個" required>
+              <input type='text' name='quantity' class="form-control" value="{{old('quantity')}}" placeholder="1個" required>
               <div class="invalid-feedback">
                 分量の入力は必須です
               </div>

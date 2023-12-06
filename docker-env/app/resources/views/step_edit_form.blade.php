@@ -11,21 +11,21 @@
     @endif
     <div class="card-body">
       @foreach($recipes as $recipe)
-      <form action="{{route('step_create',['recipe'=>$recipe['id']])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
+      <form action="{{route('step_edit',['recipe'=>$recipe['recipe_id']])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
         @csrf
         <a onclick=add() class="btn btn-sm btn-light">+追加</a>
         <div id="input_plural">
           <div class="card-group">
             <div class="card">
-              <lavel for='name' class="form-label">サブ画像</lavel>
-              <input type='file' name='sub_image' class="form-control" required accept="image/*">
+              <lavel for='sub_image' class="form-label">サブ画像</lavel>
+              <input type='file' name='sub_image' class="form-control">
               <div class="invalid-feedback">
                 材料の入力は必須です
               </div>
             </div>
             <div class="card">
               <lavel for='procedure' class="form-label">手順</lavel>
-              <textarea name='procedure' class="form-control" required>{{old('procedure')}}</textarea>
+              <textarea name='procedure' class="form-control" required>{{$recipe['procedure']}}</textarea>
               <div class="invalid-feedback">
                 分量の入力は必須です
               </div>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div>
-          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipe['id']}}" required>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipe['recipe_id']}}" required>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>

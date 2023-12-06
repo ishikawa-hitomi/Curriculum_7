@@ -48,14 +48,13 @@ class RegistrantionController extends Controller
 
     public function ingredient_create(Recipe $recipe,Request $request){
         $ingredient=new Ingredient;
-        $input=$request->input();
-        foreach($input as $val){
-            $ingredient->name=$val['name'];
-            $ingredient->quantity=$val['quantity'];
+        $columns=['name','quantity'];
+        foreach($columns as $column){
+            $ingredient->$column=$request->$column;
+            $ingredient->$column=$request->$column;
         }
         $ingredient->recipe_id=$request->recipe_id;
         $ingredient->save();
-        var_dump($input);
         return redirect('/step_create/'.$recipe['id']);
     }
 
@@ -96,6 +95,7 @@ class RegistrantionController extends Controller
         }
         $tag->save();
         return redirect('/recipe_create');
+        //できれば前の画面に戻りたい
     }
 
     //ここから投稿編集
@@ -130,6 +130,7 @@ class RegistrantionController extends Controller
         var_dump($ingredients);
         return view('ingredient_edit_form',[
             'recipes'=>$ingredients,
+            'recipeid'=>$recipe['id'],
         ]);
     }
 
@@ -163,6 +164,8 @@ class RegistrantionController extends Controller
             \Storage::disk('public')->delete($image_path);
             $image_path=$image_path->store('public');
             $step->sub_image=basename($image_path);
+        }else{
+            $step->sub_image=$step->select('sub_image')->where('recipe_id','=',$recipe['id'])->get();
         }
         $step->save();
         return redirect('/');

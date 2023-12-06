@@ -24,4 +24,8 @@ class Recipe extends Model
     public function step(){
         return $this->hasMany('App\Models\Step','id','recipe_id');
     }
+
+    public function like(){
+        return $this->hasMany('App\Models\Like','id','recipe_id');
+    }
 }

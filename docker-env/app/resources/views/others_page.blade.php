@@ -5,11 +5,26 @@
         <h4 class="card-title">{{$user['name']}}</h4>
       <div class="card-body">
         @if($user['icon']===null)
-        <img class="" src="{{asset('download20231202123050.png') }}">
+          <img class="col-sm-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
         @else
-        <img class="" src="{{asset('storage/' . $user['icon']) }}">
+          <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $user['icon']) }}">
         @endif
         <p>{{$user['profile']}}</p>
+        @if(!empty($myfollow))
+          <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm">
+            フォローを消す
+            <span class="badge"></span>
+          </a>
+        @else
+          <a href="{{ route('add_follow',['user'=>$user['id']])}}" class="btn btn-secondary btn-sm">
+            フォローをつける
+            <span class="badge"></span>
+          </a>
+        @endif
+      </div>
+      <div class="nav">
+        <a class="nav-link" href="{{route('follow_view',['user'=>$user['id']])}}">フォロー<br>{{$follow}}</a>
+        <a class="nav-link" href="{{route('follower_view',['user'=>$user['id']])}}">フォロワー<br>{{$follower}}</a>
       </div>
     @endforeach
   </div>
@@ -24,10 +39,10 @@
           @foreach($recipes as $recipe)
           <div class="col">
                 <div class="card m-4">
-                  <a href="{{route('my_post',['recipe'=>$recipe['id']])}}"><img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+                  <a href="{{route('others_post',['recipe'=>$recipe['id']])}}"><img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
                   <div class="card-body">
-                    <a href="{{route('my_post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
-                    <a href="{{route('my_post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['title']}}</a>
+                    <a href="{{route('others_post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
+                    <a href="{{route('others_post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['title']}}</a>
                   </div>
                 </div>
               </div>
@@ -36,18 +51,30 @@
       </div>
       <div class="tab-pane fade" id="nav-like" role="tabpanel" aria-labelledby="nav-like-tab">
         <div class="row row-cols-1 row-cols-md-2">
-            @foreach($recipes as $recipe)
+          @foreach($likes as $like)
+            @if($like['user_id']==Auth::user()->id)
               <div class="col">
                 <div class="card m-4">
-                  <a href="{{route('my_post',['recipe'=>$recipe['id']])}}"><img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+                  <a href="{{route('my_post',['recipe'=>$like['recipe_id']])}}"><img class="card-img-top" src="{{asset('storage/' . $like['main_image']) }}"></a>
                   <div class="card-body">
-                    <a href="{{route('my_post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
-                    <a href="{{route('my_post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['title']}}</a>
+                    <a href="{{route('my_post',['recipe'=>$like['recipe_id']])}}" class="card-link">{{$like['display_title']}}</a>
+                    <a href="{{route('my_page',['user'=>$like['user_id']])}}" class="card-link">{{$like['name']}}</a>
                   </div>
                 </div>
               </div>
-            @endforeach
-          </div>
+            @else
+              <div class="col">
+                <div class="card m-4">
+                  <a href="{{route('others_post',['recipe'=>$like['recipe_id']])}}"><img class="card-img-top" src="{{asset('storage/' . $like['main_image']) }}"></a>
+                  <div class="card-body">
+                    <a href="{{route('others_post',['recipe'=>$like['recipe_id']])}}" class="card-link">{{$like['display_title']}}</a>
+                    <a href="{{route('others_page',['user'=>$like['user_id']])}}" class="card-link">{{$like['name']}}</a>
+                  </div>
+                </div>
+              </div>
+            @endif
+          @endforeach
+        </div>
       </div>
     </div>
   </nav>

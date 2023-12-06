@@ -10,9 +10,7 @@
       </ul>
     @endif
     <div class="card-body">
-      @foreach($recipes as $recipe)
-        <form action="{{route('ingredient_edit',['recipe'=>$recipe['id']])}}" method="post" class="was-validated form-inline" novalidate>
-      @endforeach
+        <form action="{{route('ingredient_edit',['recipe'=>$recipeid])}}" method="post" class="was-validated form-inline" novalidate>
         @csrf
         <a onclick="add()" class="btn btn-sm btn-light">+追加</a>
         @foreach($recipes as $recipe)
@@ -36,7 +34,7 @@
           </div>
         @endforeach
         <div>
-          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipe['recipe_id']}}" required>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeid}}" required>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>

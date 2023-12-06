@@ -7,9 +7,26 @@
                 <span class="badge rounded-pill bg-primary">{{$recipe['tag']['name']}}</span>
                 <img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}">
                 @foreach($users as $user)
-                    <a href="{{route('others_page',['user'=>$user['id']])}}"><img class="card-img" src="{{asset('storage/' . $user['icon']) }}"></a>
+                    <a href="{{route('others_page',['user'=>$user['id']])}}">
+                        @if($user['icon']===null)
+                            <img class="col-sm-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
+                        @else
+                            <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $user['icon']) }}">
+                        @endif
+                    </a>
                     <a href="{{route('others_page',['user'=>$user['id']])}}">{{$user['name']}}</a>
                 @endforeach
+                @if(!empty($like))
+                <a href="{{ route('remove_like',['recipe'=>$recipe['id']])}}" class="btn btn-success btn-sm">
+                    いいねを消す
+                    <span class="badge"></span>
+                </a>
+                @else
+                <a href="{{ route('add_like',['recipe'=>$recipe['id']])}}" class="btn btn-secondary btn-sm">
+                    いいねをつける
+                    <span class="badge"></span>
+                </a>
+                @endif
                 <div class="card-group">
                     <div class="card">
                         <div class="card-body">

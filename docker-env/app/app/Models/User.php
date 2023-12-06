@@ -20,6 +20,14 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\profile');
     }
 
+    public function like(){
+        return $this->hasMany('App\Models\Like');
+    }
+
+    public function follow(){
+        return $this->hasMany('App\Models\Follow');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

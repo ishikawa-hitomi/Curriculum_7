@@ -65,7 +65,7 @@
         </div>
         <div>
           <lavel for='memo' lass="form-label">メモ</lavel>
-          <textarea name='memo' class="form-control">{{old('memo')}}</textarea>
+          <textarea name='memo' class="form-control">{{$recipe['memo']}}</textarea>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>

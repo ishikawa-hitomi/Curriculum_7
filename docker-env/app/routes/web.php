@@ -24,6 +24,15 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/recipe/{recipe}/my_post', [DisplayController::class,'my_post'])->name('my_post');
     Route::get('/recipe/{recipe}/others_post', [DisplayController::class,'others_post'])->name('others_post');
 
+    Route::get('/add_like/{recipe}',[DisplayController::class,'add_like'])->name('add_like');
+    Route::get('/remove_like/{recipe}',[DisplayController::class,'remove_like'])->name('remove_like');
+
+    Route::get('/add_follow/{user}',[DisplayController::class,'add_follow'])->name('add_follow');
+    Route::get('/remove_follow/{user}',[DisplayController::class,'remove_follow'])->name('remove_follow');
+
+    Route::get('/follow_view/{user}',[DisplayController::class,'follow_view'])->name('follow_view');
+    Route::get('/follower_view/{user}',[DisplayController::class,'follower_view'])->name('follower_view');
+
     Route::get('/recipe_create',[RegistrantionController::class,'recipe_create_form'])->name('recipe_create');
     Route::post('/recipe_create',[RegistrantionController::class,'recipe_create']);
 
