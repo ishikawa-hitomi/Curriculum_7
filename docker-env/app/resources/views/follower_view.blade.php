@@ -28,13 +28,13 @@ follower
               <p class="col-sm-4">{{$user['profile']}}</p>
             </div>
           </a>
-          @if(!empty($myfollow))
-            <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-1">
+          @if($myfollow==$user['user_id'])ここバグっとる
+            <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-2">
               フォローを消す
               <span class="badge"></span>
             </a>
           @else
-            <a href="{{ route('add_follow',['user'=>$user['id']])}}" class="btn btn-secondary btn-sm col-sm-1">
+            <a href="{{ route('add_follow',['user'=>$user['id']])}}" class="btn btn-secondary btn-sm col-sm-2">
               フォローをつける
               <span class="badge"></span>
             </a>

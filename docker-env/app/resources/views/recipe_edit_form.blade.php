@@ -9,14 +9,11 @@
   @endif
   @foreach($recipes as $recipe)
     <div class="card-body">
-      <form action="{{route('recipe_edit',['recipe'=>$recipe['id']])}}" method="post" enctype="multipart/form-data">
+      <form action="{{route('recipe_edit',['recipe'=>$recipe['id']])}}" method="post" class="was-validated" enctype="multipart/form-data">
         @csrf
         <div>
           <lavel for='main_image' class="form-label">メイン画像</lavel>
           <input type='file' name='main_image' class="form-control">
-          <div class="invalid-feedback">
-            サムネイルに使用する画像登録は必須です
-          </div>
         </div>
         <div>
           <lavel for='display_title' class="form-label">表示用タイトル</lavel>

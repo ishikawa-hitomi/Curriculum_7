@@ -2,101 +2,77 @@
 @section('content')
   <div class="card">
     <h4 class="card-title">手順編集</h4>
-    @if($errors->any())
-      <ul>
-        @foreach($errors->all() as $message)
-          <li>{{$message}}</li>
-        @endforeach
-      </ul>
-    @endif
     <div class="card-body">
-      @foreach($recipes as $recipe)
-      <form action="{{route('step_edit',['recipe'=>$recipe['recipe_id']])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
+      <form action="{{route('step_edit',['recipe'=>$recipeid])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
         @csrf
         <a onclick=add() class="btn btn-sm btn-light">+追加</a>
         <div id="input_plural">
-          <div class="card-group">
-            <div class="card">
-              <lavel for='sub_image' class="form-label">サブ画像</lavel>
-              <input type='file' name='sub_image' class="form-control">
-              <div class="invalid-feedback">
-                材料の入力は必須です
+          @foreach($recipes as $recipe)
+            <div class="card-group">
+              <div class="card">
+                <lavel for='sub_image' class="form-label">サブ画像</lavel>
+                <input type='file' name='sub_image[]' class="form-control" required accept="image/*">
+                <div class="invalid-feedback">
+                  サブ画像の入力は必須です
+                </div>
+              </div>
+              <div class="card">
+                <lavel for='procedure' class="form-label">手順</lavel>
+                <textarea name='procedure[]' class="form-control" required>{{$recipe['procedure']}}</textarea>
+                <div class="invalid-feedback">
+                  手順の入力は必須です
+                </div>
               </div>
             </div>
-            <div class="card">
-              <lavel for='procedure' class="form-label">手順</lavel>
-              <textarea name='procedure' class="form-control" required>{{$recipe['procedure']}}</textarea>
-              <div class="invalid-feedback">
-                分量の入力は必須です
-              </div>
-            </div>
-          </div>
+          @endforeach
         </div>
         <div>
-          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipe['recipe_id']}}" required>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeid}}" required>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>
-      @endforeach
     </div>
   </div>
 
-  <!--
     <script>
     let inputPlural = document.getElementById('input_plural');
     var count = 2;
 
     function add() {
-      let div = document.createElement('DIV');
-      div.classList.add('d-flex');
+      let newDiv = document.createElement('DIV');
+      newDiv.classList.add('card-group');
+      newDiv.id = 'sub-plural';
 
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'name[]');
-      div.appendChild(input);
+      let div1 = document.createElement('DIV');
+      div1.classList.add('card');
+      newDiv.appendChild(div1);
 
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'quantity[]');
-      div.appendChild(input);
+      var input1 = document.createElement('INPUT');
+      input1.setAttribute("type", "file");
+      input1.classList.add('form-control');
+      input1.setAttribute('name', 'sub_image[]');
+      div1.appendChild(input1);
 
-      var input = document.createElement('INPUT');
-      input.setAttribute('type', 'button');
-      input.setAttribute('value', '削除');
-      input.setAttribute('onclick', 'del(this)');
-      div.appendChild(input);
+      let div2 = document.createElement('DIV');
+      div2.classList.add('card');
+      newDiv.appendChild(div2);
 
-      inputPlural.appendChild(div);
-      count++;
-    }
-
-    function addd() {
-      let div = document.createElement('DIV');
-      div.classList.add('d-flex');
-
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'name'+count);
-      div.appendChild(input);
-
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'quantity'+count);
-      div.appendChild(input);
+      var input2 = document.createElement('INPUT');
+      input2.classList.add('form-control');
+      input2.setAttribute('name', 'procedure[]');
+      div2.appendChild(input2);
 
       var input = document.createElement('INPUT');
       input.setAttribute('type', 'button');
       input.setAttribute('value', '削除');
       input.setAttribute('onclick', 'del(this)');
-      div.appendChild(input);
+      newDiv.appendChild(input);
 
-      inputPlural.appendChild(div);
+      inputPlural.appendChild(newDiv);
       count++;
     }
-
     function del(o) {
       o.parentNode.remove();
     }
   </script>
-  -->
 @endsection

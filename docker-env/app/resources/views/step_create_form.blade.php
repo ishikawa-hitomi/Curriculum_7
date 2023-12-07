@@ -2,32 +2,25 @@
 @section('content')
   <div class="card">
     <h4 class="card-title">手順登録</h4>
-    @if($errors->any())
-      <ul>
-        @foreach($errors->all() as $message)
-          <li>{{$message}}</li>
-        @endforeach
-      </ul>
-    @endif
     <div class="card-body">
       @foreach($recipes as $recipe)
-      <form action="{{route('step_create',['recipe'=>$recipe['id']])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
+      <form action="{{route('step_create',['recipe'=>$recipe['id']])}}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
         <a onclick=add() class="btn btn-sm btn-light">+追加</a>
         <div id="input_plural">
           <div class="card-group">
             <div class="card">
-              <lavel for='name' class="form-label">サブ画像</lavel>
-              <input type='file' name='sub_image' class="form-control" required accept="image/*">
+              <lavel for='sub_image' class="form-label">サブ画像</lavel>
+              <input type='file' name='sub_image[]' class="form-control" required accept="image/*">
               <div class="invalid-feedback">
-                材料の入力は必須です
+                サブ画像の入力は必須です
               </div>
             </div>
             <div class="card">
               <lavel for='procedure' class="form-label">手順</lavel>
-              <textarea name='procedure' class="form-control" required>{{old('procedure')}}</textarea>
+              <textarea name='procedure[]' class="form-control" required>{{old('procedure')}}</textarea>
               <div class="invalid-feedback">
-                分量の入力は必須です
+                手順の入力は必須です
               </div>
             </div>
           </div>
@@ -41,62 +34,76 @@
     </div>
   </div>
 
-  <!--
-    <script>
+  <script>
     let inputPlural = document.getElementById('input_plural');
-    var count = 2;
+    var count = 1;
 
     function add() {
-      let div = document.createElement('DIV');
-      div.classList.add('d-flex');
+      let newDiv = document.createElement('DIV');
+      newDiv.classList.add('card-group');
+      newDiv.id = 'sub-plural';
 
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'name[]');
-      div.appendChild(input);
+      let div1 = document.createElement('DIV');
+      div1.classList.add('card');
+      newDiv.appendChild(div1);
 
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'quantity[]');
-      div.appendChild(input);
+      var input1 = document.createElement('INPUT');
+      input1.setAttribute("type", "file");
+      input1.classList.add('form-control');
+      input1.setAttribute('name', 'sub_image[]');
+      input1.setAttribute('required', true);
+      div1.appendChild(input1);
+
+      let requred1 = document.createElement('DIV');
+      requred1.classList.add('invalid-feedback');
+      requred1.textContent = "サブ画像の入力は必須です。";
+      div1.appendChild(requred1);
+
+      let div2 = document.createElement('DIV');
+      div2.classList.add('card');
+      newDiv.appendChild(div2);
+
+      var input2 = document.createElement('TEXTAREA');
+      input2.classList.add('form-control');
+      input2.setAttribute('name', 'procedure[]');
+      input2.setAttribute('required', true);
+      div2.appendChild(input2);
+
+      let requred2 = document.createElement('DIV');
+      requred2.classList.add('invalid-feedback');
+      requred2.textContent = "手順の入力は必須です。";
+      div2.appendChild(requred2);
 
       var input = document.createElement('INPUT');
       input.setAttribute('type', 'button');
       input.setAttribute('value', '削除');
       input.setAttribute('onclick', 'del(this)');
-      div.appendChild(input);
+      newDiv.appendChild(input);
 
-      inputPlural.appendChild(div);
+      inputPlural.appendChild(newDiv);
       count++;
     }
-
-    function addd() {
-      let div = document.createElement('DIV');
-      div.classList.add('d-flex');
-
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'name'+count);
-      div.appendChild(input);
-
-      var input = document.createElement('INPUT');
-      input.classList.add('form-control');
-      input.setAttribute('name', 'quantity'+count);
-      div.appendChild(input);
-
-      var input = document.createElement('INPUT');
-      input.setAttribute('type', 'button');
-      input.setAttribute('value', '削除');
-      input.setAttribute('onclick', 'del(this)');
-      div.appendChild(input);
-
-      inputPlural.appendChild(div);
-      count++;
-    }
-
     function del(o) {
       o.parentNode.remove();
     }
+
+    (() => {
+    'use strict'
+
+    // Bootstrapカスタム検証スタイルを適用してすべてのフォームを取得
+    const forms = document.querySelectorAll('.needs-validation')
+
+    // ループして帰順を防ぐ
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
   </script>
-  -->
 @endsection

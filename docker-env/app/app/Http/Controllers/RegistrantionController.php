@@ -26,7 +26,7 @@ class RegistrantionController extends Controller
         ]);
     }
 
-    public function recipe_create(CreateData $request){
+    public function recipe_create(Request $request){
         $recipe=new Recipe;
         $columns=['display_title','title','time','serve','tag_id','memo'];
         foreach($columns as $column){
@@ -47,14 +47,17 @@ class RegistrantionController extends Controller
     }
 
     public function ingredient_create(Recipe $recipe,Request $request){
-        $ingredient=new Ingredient;
-        $columns=['name','quantity'];
-        foreach($columns as $column){
-            $ingredient->$column=$request->$column;
-            $ingredient->$column=$request->$column;
+        $name=$request['name'];
+        $quantity=$request['quantity'];
+        $count=count($name);
+        var_dump($name);
+        for($a=0; $a<$count; $a++){
+            $ingredient=new Ingredient;
+            $ingredient->name=$name[$a];
+            $ingredient->quantity=$quantity[$a];
+            $ingredient->recipe_id=$recipe['id'];
+            $ingredient->save();
         }
-        $ingredient->recipe_id=$request->recipe_id;
-        $ingredient->save();
         return redirect('/step_create/'.$recipe['id']);
     }
 
@@ -67,14 +70,17 @@ class RegistrantionController extends Controller
     }
 
     public function step_create(Recipe $recipe,Request $request){
-        $step=new Step;
-        $columns=['procedure','recipe_id'];
-        foreach($columns as $column){
-            $step->$column=$request->$column;
+        $procedure=$request['procedure'];
+        $sub_image=$request['sub_image'];
+        $count=count($procedure);
+        for($a=0; $a<$count; $a++){
+            $step=new Step;
+            $step->procedure=$procedure[$a];
+            $step->recipe_id=$recipe['id'];
+            $image_path=$sub_image[$a]->store('public');
+            $step->sub_image=basename($image_path);
+            $step->save();
         }
-        $image_path=$request->file('sub_image')->store('public');
-        $step->sub_image=basename($image_path);
-        $step->save();
         return redirect('/');
     }
 
@@ -135,12 +141,19 @@ class RegistrantionController extends Controller
     }
 
     public function ingredient_edit(Recipe $recipe,Request $request){
-        $ingredient=new Ingredient;
-        $columns=['name','quantity','recipe_id'];
-        foreach($columns as $column){
-            $ingredient->$column=$request->$column;
+        $del=new Ingredient;
+        $dels=$del->where('recipe_id','=',$recipe['id']);
+        $dels->delete();
+        $name=$request['name'];
+        $quantity=$request['quantity'];
+        $count=count($name);
+        for($a=0; $a<$count; $a++){
+            $ingredient=new Ingredient;
+            $ingredient->name=$name[$a];
+            $ingredient->quantity=$quantity[$a];
+            $ingredient->recipe_id=$recipe['id'];
+            $ingredient->save();
         }
-        $ingredient->save();
         return redirect('/step_edit/'.$ingredient['recipe_id']);
     }
 
@@ -150,24 +163,25 @@ class RegistrantionController extends Controller
         var_dump($recipes);
         return view('step_edit_form',[
             'recipes'=>$recipes,
+            'recipeid'=>$recipe['id'],
         ]);
     }
 
     public function step_edit(Recipe $recipe,Request $request){
-        $step=new Step;
-        $columns=['procedure','recipe_id'];
-        foreach($columns as $column){
-            $step->$column=$request->$column;
-        }
-        $image_path=$request->file('sub_image');
-        if(isset($image_path)){
-            \Storage::disk('public')->delete($image_path);
-            $image_path=$image_path->store('public');
+        $del=new Step;
+        $dels=$del->where('recipe_id','=',$recipe['id']);
+        $dels->delete();
+        $procedure=$request['procedure'];
+        $sub_image=$request['sub_image'];
+        $count=count($procedure);
+        for($a=0; $a<$count; $a++){
+            $step=new Step;
+            $step->procedure=$procedure[$a];
+            $step->recipe_id=$recipe['id'];
+            $image_path=$sub_image[$a]->store('public');
             $step->sub_image=basename($image_path);
-        }else{
-            $step->sub_image=$step->select('sub_image')->where('recipe_id','=',$recipe['id'])->get();
+            $step->save();
         }
-        $step->save();
         return redirect('/');
     }
 

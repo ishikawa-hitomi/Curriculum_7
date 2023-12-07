@@ -128,7 +128,7 @@ class DisplayController extends Controller
 
     public function follow_view(User $user){
         $follows=Follow::where('user_id', $user['id'])->join('users','follow_user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('user_id', $user['id'])->get()->toArray();
+        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
 
         var_dump($myfollow);
         return view('follow_view',
@@ -140,8 +140,8 @@ class DisplayController extends Controller
 
     public function follower_view(User $user){
         $followers=Follow::where('follow_user_id', $user['id'])->join('users','user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('follow_user_id', $user['id'])->get()->toArray();
-        var_dump($followers);
+        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
+        var_dump($myfollow);
         return view('follower_view',
         [
             'followers'=>$followers,
