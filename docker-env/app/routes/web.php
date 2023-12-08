@@ -65,6 +65,9 @@ Route::group(['middleware'=>'auth'],function(){
 
     Route::get('/step_edit/{recipe}',[RegistrantionController::class,'step_edit_form'])->name('step_edit');
     Route::post('/step_edit/{recipe}',[RegistrantionController::class,'step_edit']);
+
+    Route::get('/comment_create/{recipe}',[RegistrantionController::class,'comment_create_form'])->name('comment_create');
+    Route::post('/comment_create/{recipe}',[RegistrantionController::class,'comment_create']);
 });
 
 Auth::routes();

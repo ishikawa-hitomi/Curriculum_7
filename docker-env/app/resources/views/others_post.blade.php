@@ -27,6 +27,7 @@
                     <span class="badge"></span>
                 </a>
                 @endif
+                <a href="{{route('comment_create',['recipe'=>$recipe['id']])}}" class="btn btn-primary btn-sm">コメントを投稿する</a>
                 <div class="card-group">
                     <div class="card">
                         <div class="card-body">
@@ -85,6 +86,20 @@
                 </div>
             </div>
         @endforeach
+        <div class="card card-body m-5">
+            @foreach($comments as $comment)
+                <div class="row">
+                    @if($comment['icon']===null)
+                        <img src="{{asset('download20231202123050.png') }}" class="col-sm-1 rounded-circle">
+                    @else
+                        <img src="{{asset('storage/' . $comment['icon']) }}" class="col-sm-1 rounded-circle">
+                    @endif
+                    <div class="col-md-10">
+                            <p class="card-text">{{$comment['comment']}}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 
 @endsection

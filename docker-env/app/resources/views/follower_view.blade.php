@@ -1,4 +1,3 @@
-follower
 @extends('layouts.layout')
 @section('content')
   @foreach($followers as $user)
@@ -28,7 +27,7 @@ follower
               <p class="col-sm-4">{{$user['profile']}}</p>
             </div>
           </a>
-          @if($myfollow==$user['user_id'])ここバグっとる
+          @if($user['user_id'])
             <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-2">
               フォローを消す
               <span class="badge"></span>

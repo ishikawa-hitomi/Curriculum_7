@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Models\Ingredient;
 use App\Models\Step;
+use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateData;
@@ -102,6 +103,24 @@ class RegistrantionController extends Controller
         $tag->save();
         return redirect('/recipe_create');
         //できれば前の画面に戻りたい
+    }
+
+    //ここからコメント作成
+    public function comment_create_form(Recipe $recipe){
+        $recipeid=$recipe->id;
+        return view('comment_create_form',[
+            'recipeid'=>$recipeid,
+        ]);
+    }
+
+    public function comment_create(Recipe $recipe,Request $request){
+        $comment=new Comment;
+        $columns=['comment','user_id','recipe_id'];
+        foreach($columns as $column){
+            $comment->$column=$request->$column;
+        }
+        $comment->save();
+        return redirect('/recipe/'.$recipe['id'].'/others_post');
     }
 
     //ここから投稿編集

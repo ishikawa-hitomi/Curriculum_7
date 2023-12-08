@@ -11,6 +11,7 @@ use App\Models\Step;
 use App\Models\Ingredient;
 use App\Models\Like;
 use App\Models\Follow;
+use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,6 +33,7 @@ class DisplayController extends Controller
         $ingredients=$ingredient->where('recipe_id','=',$recipe['id'])->get()->toArray();
         $step=new Step;
         $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
+        $comment=new Comment;
         var_dump($steps);
         return view('my_post',
         [
@@ -50,6 +52,9 @@ class DisplayController extends Controller
         $step=new Step;
         $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
         $like=Like::where('recipe_id', $recipe->id)->where('user_id',Auth::user()->id)->first();
+        $comment=new Comment;
+        $comments=$comment->join('users','comments.user_id','=','users.id')->where('recipe_id','=',$recipe['id'])->get()->toArray();
+        var_dump($comments);
         return view('others_post',
         [
             'recipes'=>$recipes,
@@ -57,6 +62,7 @@ class DisplayController extends Controller
             'ingredients'=>$ingredients,
             'steps'=>$steps,
             'like'=>$like,
+            'comments'=>$comments,
         ]);
     }
 
@@ -128,24 +134,20 @@ class DisplayController extends Controller
 
     public function follow_view(User $user){
         $follows=Follow::where('user_id', $user['id'])->join('users','follow_user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
-
-        var_dump($myfollow);
+        //フォローボタンの動きがまだ
         return view('follow_view',
         [
             'follows'=>$follows,
-            'myfollow'=>$myfollow,
         ]);
     }
 
     public function follower_view(User $user){
         $followers=Follow::where('follow_user_id', $user['id'])->join('users','user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
-        var_dump($myfollow);
+        var_dump($followers);
+        //フォローボタンの動きがまだ
         return view('follower_view',
         [
             'followers'=>$followers,
-            'myfollow'=>$myfollow,
         ]);
     }
 }
