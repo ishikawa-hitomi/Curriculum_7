@@ -17,13 +17,33 @@ use Illuminate\Support\Facades\Auth;
 
 class DisplayController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $recipe=new Recipe;
-        $recipes=$recipe->select('recipes.id as recipe_id','recipes.main_image','recipes.display_title','recipes.user_id','users.name','users.icon')->where('recipes.del_flg','=','1')->where('users.del_flg','=','1')->join('users','recipes.user_id','=','users.id')->get()->toArray();
+        $recipes=$recipe->select('recipes.id as recipe_id','recipes.main_image','recipes.display_title','recipes.user_id','recipes.created_at','users.name','users.icon')->where('recipes.del_flg','=','1')->where('users.del_flg','=','1')->join('users','recipes.user_id','=','users.id');
+        $keyword=$request->input('keyword');
+        $from=$request->input('from');
+        $to=$request->input('to');
+        if(!empty($keyword)){
+            $spaceConversion = mb_convert_kana($keyword, 's');
+            $wordArray = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
+            foreach($wordArray as $word){
+                $recipes->where('display_title','LIKE','%'.$word.'%')->orwhere('title','LIKE','%'.$word.'%');
+            }
+        }
+        if(!empty($from)){
+            $recipes->where('recipes.created_at','>=',$from);
+        }
+        if(!empty($to)){
+            $recipes->where('recipes.created_at','<=',$to);
+        }
+        $recipes=$recipes->get()->toArray();
         var_dump($recipes);
         return view('main',
         [
             'recipes'=>$recipes,
+            'keyword'=>$keyword,
+            'from'=>$from,
+            'to'=>$to,
         ]);
     }
 
@@ -34,12 +54,14 @@ class DisplayController extends Controller
         $step=new Step;
         $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
         $comment=new Comment;
+        $comments=$comment->join('users','comments.user_id','=','users.id')->where('recipe_id','=',$recipe['id'])->get()->toArray();
         var_dump($steps);
         return view('my_post',
         [
             'recipes'=>$recipes,
             'ingredients'=>$ingredients,
             'steps'=>$steps,
+            'comments'=>$comments,
         ]);
     }
 
@@ -134,20 +156,23 @@ class DisplayController extends Controller
 
     public function follow_view(User $user){
         $follows=Follow::where('user_id', $user['id'])->join('users','follow_user_id','=','users.id')->get()->toArray();
-        //フォローボタンの動きがまだ
+        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
+        $myfollow=array_column($myfollow,'follow_user_id');
         return view('follow_view',
         [
             'follows'=>$follows,
+            'myfollow'=>$myfollow,
         ]);
     }
 
     public function follower_view(User $user){
         $followers=Follow::where('follow_user_id', $user['id'])->join('users','user_id','=','users.id')->get()->toArray();
-        var_dump($followers);
-        //フォローボタンの動きがまだ
+        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
+        $myfollow=array_column($myfollow,'follow_user_id');
         return view('follower_view',
         [
             'followers'=>$followers,
+            'myfollow'=>$myfollow,
         ]);
     }
 }

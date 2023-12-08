@@ -27,7 +27,7 @@
               <p class="col-sm-4">{{$user['profile']}}</p>
             </div>
           </a>
-          @if($user['user_id'])
+          @if(in_array($user['user_id'],$myfollow))
             <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-2">
               フォローを消す
               <span class="badge"></span>

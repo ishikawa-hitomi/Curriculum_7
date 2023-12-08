@@ -1,12 +1,5 @@
 @extends('layouts.layout')
 @section('content')
-  @if($errors->any())
-    <ul>
-      @foreach($errors->all() as $message)
-        <li>{{$message}}</li>
-      @endforeach
-    </ul>
-  @endif
   @foreach($recipes as $recipe)
     <div class="card-body">
       <form action="{{route('recipe_edit',['recipe'=>$recipe['id']])}}" method="post" class="was-validated" enctype="multipart/form-data">

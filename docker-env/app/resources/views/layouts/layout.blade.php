@@ -49,7 +49,19 @@
   </header>
   <div class="main container-fluid">
     <div class="row">
-    <div class="left-content col-md-4 bg-success">
+      <div class="left-content col-md-4 bg-success">
+        <div>
+          <form action="{{route('index')}}" method="GET">
+            <input type="text" name="keyword" value="<?php if(url('/')==url()->current()) echo $keyword; ?>">
+          スペースで複数の条件検索可能
+            <div>
+              <input type="date" name="from" value="<?php if(url('/')==url()->current()) echo $from; ?>">
+              -
+              <input type="date" name="to" value="<?php if(url('/')==url()->current()) echo $to; ?>">
+            </div>
+            <input type="submit" value="検索">
+          </form>
+        </div>
         <div>
           <a href="{{route('recipe_create')}}">
             <button type='button'>新規投稿</button>
