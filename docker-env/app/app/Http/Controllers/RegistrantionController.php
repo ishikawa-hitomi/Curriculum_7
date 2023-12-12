@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Tag;
 use App\Models\User;
-use App\Models\Profile;
 use App\Models\Ingredient;
 use App\Models\Step;
 use App\Models\Comment;
@@ -35,7 +34,7 @@ class RegistrantionController extends Controller
         }
         $image_path=$request->file('main_image')->store('public');
         $recipe->main_image=basename($image_path);
-        Auth::user()->recipe()->save($recipe);
+        Auth::user()->recipes()->save($recipe);
         return redirect('/ingredient_create/'.$recipe['id']);
     }
 
@@ -145,7 +144,7 @@ class RegistrantionController extends Controller
             $image_path=$image_path->store('public');
             $recipe->main_image=basename($image_path);
         }
-        Auth::user()->recipe()->save($recipe);
+        Auth::user()->recipes()->save($recipe);
         return redirect('/ingredient_edit/'.$recipe['id']);
     }
 
@@ -271,11 +270,9 @@ class RegistrantionController extends Controller
     }
 
     public function user_delete(User $user,Request $request){
-        $columns=['name','email'];
-        foreach($columns as $column){
-            $user->$column=$request->$column;
-        }
-        $user->save();
-        return redirect('/my_page/'.$user['id']);
+        $user->delete();
+        Recipe::where('user_id','=',$user['id'])->delete();
+        Auth::logout();
+        return redirect(route('login'));
     }
 }

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Tag;
 use App\Models\User;
-use App\Models\Profile;
 use App\Models\Step;
 use App\Models\Ingredient;
 use App\Models\Like;
@@ -14,12 +13,13 @@ use App\Models\Follow;
 use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DisplayController extends Controller
 {
     public function index(Request $request){
         $recipe=new Recipe;
-        $recipes=$recipe->select('recipes.id as recipe_id','recipes.main_image','recipes.display_title','recipes.user_id','recipes.created_at','users.name','users.icon')->where('recipes.del_flg','=','1')->where('users.del_flg','=','1')->join('users','recipes.user_id','=','users.id');
+        $recipes=$recipe->select('recipes.id as recipe_id','recipes.main_image','recipes.display_title','recipes.user_id','recipes.created_at','users.name','users.icon')->where('recipes.del_flg','=','1')->join('users','recipes.user_id','=','users.id');
         $keyword=$request->input('keyword');
         $from=$request->input('from');
         $to=$request->input('to');
@@ -37,7 +37,8 @@ class DisplayController extends Controller
             $recipes->where('recipes.created_at','<=',$to);
         }
         $recipes=$recipes->get()->toArray();
-        var_dump($recipes);
+        $sample=$recipe->get()->toArray();
+        var_dump($sample);
         return view('main',
         [
             'recipes'=>$recipes,
@@ -90,10 +91,10 @@ class DisplayController extends Controller
 
     public function my_page(User $user){
         $users=$user->where('id','=',$user['id'])->get()->toArray();
-        $recipes=Auth::user()->recipe()->where('del_flg','=',1)->get()->toArray();
+        $recipes=Auth::user()->recipes()->where('del_flg','=',1)->get()->toArray();
         $likes=Like::where('likes.user_id',Auth::user()->id)->join('recipes','likes.recipe_id','=','recipes.id')->join('users','recipes.user_id','=','users.id')->get()->toArray();
-        $follower=Follow::where('follow_user_id', $user['id'])->count();
-        $follow=Follow::where('user_id', $user['id'])->count();
+        $follower=Follow::where('following_id', $user['id'])->count();
+        $follow=Follow::where('follower_id', $user['id'])->count();
         return view('my_page',
         [
             'users'=>$users,
@@ -109,9 +110,9 @@ class DisplayController extends Controller
         $recipe=new Recipe;
         $recipes=$recipe->where('del_flg','=',1)->where('user_id','=',$user['id'])->get()->toArray();
         $likes=Like::where('likes.user_id',$user['id'])->join('recipes','likes.recipe_id','=','recipes.id')->join('users','recipes.user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('follow_user_id', $user['id'])->where('user_id',Auth::user()->id)->get()->toArray();
-        $follower=Follow::where('follow_user_id', $user['id'])->count();
-        $follow=Follow::where('user_id', $user['id'])->count();
+        $myfollow=Follow::where('following_id', $user['id'])->where('follower_id',Auth::user()->id)->get()->toArray();
+        $follower=Follow::where('following_id', $user['id'])->count();
+        $follow=Follow::where('follower_id', $user['id'])->count();
         var_dump($myfollow);
         return view('others_page',
         [
@@ -119,6 +120,23 @@ class DisplayController extends Controller
             'recipes'=>$recipes,
             'likes'=>$likes,
             'myfollow'=>$myfollow,
+            'follower'=>$follower,
+            'follow'=>$follow,
+        ]);
+    }
+
+    public function page(User $user){
+        $users=User::where('id',$user['id'])->get()->toArray();
+        $recipes=$user->recipes->toArray();
+        $likes=$user->likes()->join('recipes','recipe_id','=','recipes.id')->get()->toArray();
+        $follower=$user->following->count();
+        $follow=$user->follower->count();
+        var_dump($likes);
+        return view('page',
+        [
+            'users'=>$users,
+            'recipes'=>$recipes,
+            'likes'=>$likes,
             'follower'=>$follower,
             'follow'=>$follow,
         ]);
@@ -141,34 +159,34 @@ class DisplayController extends Controller
 
     public function add_follow(User $user){
         $follow=new Follow;
-        $follow->follow_user_id=$user->id;
-        $follow->user_id=Auth::user()->id;
+        $follow->following_id=$user->id;
+        $follow->follower_id=Auth::user()->id;
         $follow->save();
         return back();
     }
 
     public function remove_follow(User $user){
         $users=Auth::user()->id;
-        $follow=Follow::where('follow_user_id',$user->id)->where('user_id',$users)->first();
+        $follow=Follow::where('following_id',$user->id)->where('follower_id',$users)->first();
         $follow->delete();
         return back();
     }
 
     public function follow_view(User $user){
-        $follows=Follow::where('user_id', $user['id'])->join('users','follow_user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
-        $myfollow=array_column($myfollow,'follow_user_id');
+        $myfollow=$user->follower->toArray();
+        $followings=$user->follower()->join('users','following_id','=','users.id')->where('deleted_at',null)->get()->toArray();
+        $myfollow=array_column($myfollow,'following_id');
         return view('follow_view',
         [
-            'follows'=>$follows,
+            'follows'=>$followings,
             'myfollow'=>$myfollow,
         ]);
     }
 
     public function follower_view(User $user){
-        $followers=Follow::where('follow_user_id', $user['id'])->join('users','user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('user_id', Auth::user()->id)->get()->toArray();
-        $myfollow=array_column($myfollow,'follow_user_id');
+        $myfollow=$user->follower->toArray();
+        $followers=$user->following()->join('users','follower_id','=','users.id')->where('deleted_at',null)->get()->toArray();
+        $myfollow=array_column($myfollow,'following_id');
         return view('follower_view',
         [
             'followers'=>$followers,

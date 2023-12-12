@@ -20,6 +20,7 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/', [DisplayController::class,'index'])->name('index');
     Route::get('/my_page/{user}', [DisplayController::class,'my_page'])->name('my_page');
     Route::get('/others_page/{user}', [DisplayController::class,'others_page'])->name('others_page');
+    Route::get('/page/{user}', [DisplayController::class,'page'])->name('page');
 
     Route::get('/recipe/{recipe}/my_post', [DisplayController::class,'my_post'])->name('my_post');
     Route::get('/recipe/{recipe}/others_post', [DisplayController::class,'others_post'])->name('others_post');

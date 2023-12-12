@@ -12,4 +12,8 @@ class Ingredient extends Model
     protected $fillable=['name','quantity','recipe_id'];
 
     public $timestamps=false;
+
+    public function recipe(){
+        return $this->belongsTo(Recipe::class);
+    }
 }

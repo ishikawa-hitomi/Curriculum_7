@@ -11,7 +11,7 @@
             @else
               <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $recipe['icon']) }}">
             @endif
-            <a href="{{route('my_page',['user'=>$recipe['user_id']])}}" class="card-link">{{$recipe['name']}}</a>
+            <a href="{{route('page',['user'=>$recipe['user_id']])}}" class="card-link">{{$recipe['name']}}</a>
           </div>
         </div>
       @else
@@ -24,7 +24,7 @@
             @else
               <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $recipe['icon']) }}">
             @endif
-            <a href="{{route('others_page',['user'=>$recipe['user_id']])}}" class="card-link">{{$recipe['name']}}</a>
+            <a href="{{route('page',['user'=>$recipe['user_id']])}}" class="card-link">{{$recipe['name']}}</a>
           </div>
         </div>
       @endif

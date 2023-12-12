@@ -12,4 +12,8 @@ class Step extends Model
     protected $fillable=['procedure','sub_image','recipe_id'];
 
     public $timestamps=false;
+
+    public function recipe(){
+        return $this->belongsTo(Recipe::class);
+    }
 }

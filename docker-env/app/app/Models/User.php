@@ -6,26 +6,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use SoftDeletes;
 
-    public function recipe(){
-        return $this->hasMany('App\Models\Recipe');
-    }
-    public function profile(){
-        return $this->hasOne('App\Models\profile');
+    public function recipes(){
+        return $this->hasMany(Recipe::class);
     }
 
-    public function like(){
-        return $this->hasMany('App\Models\Like');
+    public function likes(){
+        return $this->hasMany(Like::class);
     }
 
-    public function follow(){
-        return $this->hasMany('App\Models\Follow');
+    public function following(){
+        return $this->hasMany(Follow::class,'following_id');
+    }
+
+    public function follower(){
+        return $this->hasMany(Follow::class,'follower_id');
     }
 
     /**
@@ -38,7 +41,6 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'del_flg',
     ];
 
     /**

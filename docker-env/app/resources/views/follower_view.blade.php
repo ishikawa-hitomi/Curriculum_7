@@ -3,8 +3,8 @@
   @foreach($followers as $user)
     <div class="container text-center">
       <div class="row m-2">
-        @if($user['user_id']==Auth::user()->id)
-          <a  class="col-sm-10" href="{{route('my_page',['user'=>$user['user_id']])}}">
+        @if($user['follower_id']==Auth::user()->id)
+          <a  class="col-sm-10" href="{{route('my_page',['user'=>$user['follower_id']])}}">
             <div class="row">
               @if($user['icon']===null)
                 <img class="col-sm-2 rounded-circle" src="{{asset('download20231202123050.png') }}">
@@ -16,7 +16,7 @@
             </div>
           </a>
         @else
-          <a  class="col-sm-10" href="{{route('others_page',['user'=>$user['user_id']])}}">
+          <a  class="col-sm-10" href="{{route('others_page',['user'=>$user['follower_id']])}}">
             <div class="row">
               @if($user['icon']===null)
                 <img class="col-sm-2 rounded-circle" src="{{asset('download20231202123050.png') }}">
@@ -27,7 +27,7 @@
               <p class="col-sm-4">{{$user['profile']}}</p>
             </div>
           </a>
-          @if(in_array($user['user_id'],$myfollow))
+          @if(in_array($user['follower_id'],$myfollow))
             <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-2">
               フォローを消す
               <span class="badge"></span>

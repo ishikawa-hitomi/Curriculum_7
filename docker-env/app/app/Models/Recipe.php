@@ -5,27 +5,45 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Recipe extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable=['main_image','display_title','title','time','serve','tag_id','memo','del_flg'];
 
     public function tag(){
-        return $this->belongsTo('App\Models\Tag','tag_id','id');
+        return $this->belongsTo(Tag::class);
     }
     public function user(){
-        return $this->belongsTo('App\Models\User','user_id','id');
+        return $this->belongsTo(User::class);
     }
-    public function ingredient(){
-        return $this->hasMany('App\Models\Ingredient','id','recipe_id');
+    public function ingredients(){
+        return $this->hasMany(Ingredient::class);
     }
-    public function step(){
-        return $this->hasMany('App\Models\Step','id','recipe_id');
+    public function steps(){
+        return $this->hasMany(Step::class);
     }
 
-    public function like(){
-        return $this->hasMany('App\Models\Like','id','recipe_id');
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+
+
+    public function getUser(){
+        $user=$this->user;
+        return $user;
+    }
+
+    public function getIngredients(){
+        $ingredients=$this->ingredients;
+        return $ingredients;
+    }
+
+    public function getSteps(){
+        $steps=$this->steps;
+        return $steps;
     }
 }
