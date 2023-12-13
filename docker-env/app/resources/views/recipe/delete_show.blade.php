@@ -12,9 +12,9 @@
         <th>{{$recipe['tag']['name']}}</th>
       </tr>
     </table>
-    <form action="{{route('recipe_delete',['recipe'=>$recipe['id']])}}" method="post">
+    <form action="{{route('recipe.destroy',['recipe'=>$recipe['id']])}}" method="post">
       @csrf
-      <input type="hidden" name="del_flg" value="0">
+      @method('DELETE')
       <input type='submit' value="削除">
       <a type="button" href="{{route('recipe.show',['recipe'=>$recipe['id']])}}">戻る</a>
     </form>

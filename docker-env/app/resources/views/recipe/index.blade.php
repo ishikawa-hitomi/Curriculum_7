@@ -2,9 +2,9 @@
 @section('content')
   @foreach($recipes as $recipe)
         <div class="card m-4">
-          <a style="overflow:hidden;height:400px" href="{{route('post',['recipe'=>$recipe['id']])}}"><img class="card-img-top img-fluid" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+          <a style="overflow:hidden;height:400px" href="{{route('recipe.show',['recipe'=>$recipe['id']])}}"><img class="card-img-top img-fluid" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
           <div class="card-body">
-            <a href="{{route('post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
+            <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
             @if(is_null($recipe['user']['icon']))
               <img class="col-sm-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
             @else

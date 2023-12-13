@@ -3,8 +3,7 @@
   <div class="card">
     <h4 class="card-title">手順登録</h4>
     <div class="card-body">
-      @foreach($recipes as $recipe)
-      <form action="{{route('step_create',['recipe'=>$recipe['id']])}}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+      <form action="{{route('step_create',['recipe'=>$recipeId])}}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
         <a onclick=add() class="btn btn-sm btn-light">+追加</a>
         <div id="input_plural">
@@ -26,11 +25,10 @@
           </div>
         </div>
         <div>
-          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipe['id']}}" required>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeId}}" required>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>
-      @endforeach
     </div>
   </div>
 

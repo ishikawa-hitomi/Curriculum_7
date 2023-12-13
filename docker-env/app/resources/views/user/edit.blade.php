@@ -2,8 +2,9 @@
 @section('content')
   @foreach($users as $user)
     <div class="card-body">
-      <form action="{{route('user_edit',['user'=>Auth::user()->id])}}" method="post" class="was-validated">
+      <form action="{{route('user.update',['user'=>Auth::user()->id])}}" method="post" class="was-validated">
         @csrf
+        @method('PUT')
         <div>
           <lavel for='name' class="form-label">ユーザー名</lavel>
             <input type='text' name='name' value="{{$user['name']}}" class="form-control" required>
@@ -21,7 +22,7 @@
         <input type='submit' class="btn btn-primary">
       </form>
       <a href="{{route('password.request')}}">パスワード変更はこちらから</a>
-      <a href="{{route('user_delete',['user'=>Auth::user()->id])}}">アカウント削除はこちらから</a>
+      <a href="{{route('user.delete_show',['user'=>Auth::user()->id])}}">アカウント削除はこちらから</a>
     </div>
   @endforeach
 @endsection

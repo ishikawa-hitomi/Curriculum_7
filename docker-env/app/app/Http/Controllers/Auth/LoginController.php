@@ -26,7 +26,11 @@ class LoginController extends Controller
      *
      * @var string
      */
-    public const HOME='/index';
+    protected $redirectTo = '/recipe';
+
+    protected function loggedOut(\Illuminate\Http\Request $request) {
+        return redirect(route('login'));
+    }
 
     /**
      * Create a new controller instance.

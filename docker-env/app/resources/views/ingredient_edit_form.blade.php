@@ -3,23 +3,23 @@
   <div class="card">
     <h4 class="card-title">材料・分量登録</h4>
     <div class="card-body">
-        <form action="{{route('ingredient_edit',['recipe'=>$recipeid])}}" method="post" class="was-validated" novalidate>
+        <form action="{{route('ingredient_edit',['recipe'=>$recipeId])}}" method="post" class="was-validated" novalidate>
         @csrf
         <a onclick="add()" class="btn btn-sm btn-light">+追加</a>
         <div id="input_plural">
-          @foreach($recipes as $recipe)
-            @if($recipe === reset($recipes))
+          @foreach($ingredients as $ingredient)
+            @if($ingredient === reset($ingredients))
               <div class="card-group">
                 <div class="card">
                   <lavel for='name' class="form-label">材料</lavel>
-                  <input type='text' name='name[]' class="form-control" value="{{$recipe['name']}}" placeholder="卵" required>
+                  <input type='text' name='name[]' class="form-control" value="{{$ingredient['name']}}" placeholder="卵" required>
                   <div class="invalid-feedback">
                     材料の入力は必須です
                   </div>
                 </div>
                 <div class="card">
                   <lavel for='quantity' class="form-label">材料</lavel>
-                  <input type='text' name='quantity[]' class="form-control" value="{{$recipe['quantity']}}" placeholder="1個" required>
+                  <input type='text' name='quantity[]' class="form-control" value="{{$ingredient['quantity']}}" placeholder="1個" required>
                   <div class="invalid-feedback">
                     分量の入力は必須です
                   </div>
@@ -28,13 +28,13 @@
             @else
               <div class="card-group">
                 <div class="card">
-                  <input type='text' name='name[]' class="form-control" value="{{$recipe['name']}}" placeholder="卵" required>
+                  <input type='text' name='name[]' class="form-control" value="{{$ingredient['name']}}" placeholder="卵" required>
                   <div class="invalid-feedback">
                     材料の入力は必須です
                   </div>
                 </div>
                 <div class="card">
-                  <input type='text' name='quantity[]' class="form-control" value="{{$recipe['quantity']}}" placeholder="1個" required>
+                  <input type='text' name='quantity[]' class="form-control" value="{{$ingredient['quantity']}}" placeholder="1個" required>
                   <div class="invalid-feedback">
                     分量の入力は必須です
                   </div>
@@ -45,7 +45,7 @@
           @endforeach
         </div>
         <div>
-          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeid}}" required>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeId}}" required>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>

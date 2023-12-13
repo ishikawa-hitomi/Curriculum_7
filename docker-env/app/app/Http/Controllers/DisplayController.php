@@ -13,135 +13,10 @@ use App\Models\Follow;
 use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DisplayController extends Controller
 {
-    public function index(Request $request){
-        $recipe=new Recipe;
-        $recipes=$recipe->select('recipes.id as recipe_id','recipes.main_image','recipes.display_title','recipes.user_id','recipes.created_at','users.name','users.icon')->where('recipes.del_flg','=','1')->join('users','recipes.user_id','=','users.id');
-        $keyword=$request->input('keyword');
-        $from=$request->input('from');
-        $to=$request->input('to');
-        if(!empty($keyword)){
-            $spaceConversion = mb_convert_kana($keyword, 's');
-            $wordArray = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
-            foreach($wordArray as $word){
-                $recipes->where('display_title','LIKE','%'.$word.'%')->orwhere('title','LIKE','%'.$word.'%');
-            }
-        }
-        if(!empty($from)){
-            $recipes->where('recipes.created_at','>=',$from);
-        }
-        if(!empty($to)){
-            $recipes->where('recipes.created_at','<=',$to);
-        }
-        $recipes=$recipes->get()->toArray();
-        $sample=$recipe->get()->toArray();
-        var_dump($sample);
-        return view('main',
-        [
-            'recipes'=>$recipes,
-            'keyword'=>$keyword,
-            'from'=>$from,
-            'to'=>$to,
-        ]);
-    }
-
-    public function my_post(Recipe $recipe){
-        $recipes=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
-        $ingredient=new Ingredient;
-        $ingredients=$ingredient->where('recipe_id','=',$recipe['id'])->get()->toArray();
-        $step=new Step;
-        $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
-        $comment=new Comment;
-        $comments=$comment->join('users','comments.user_id','=','users.id')->where('recipe_id','=',$recipe['id'])->get()->toArray();
-        var_dump($steps);
-        return view('my_post',
-        [
-            'recipes'=>$recipes,
-            'ingredients'=>$ingredients,
-            'steps'=>$steps,
-            'comments'=>$comments,
-        ]);
-    }
-
-    public function others_post(Recipe $recipe){
-        $recipes=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
-        $user=new User;
-        $users=$user->where('id','=',$recipe['user_id'])->get()->toArray();
-        $ingredient=new Ingredient;
-        $ingredients=$ingredient->where('recipe_id','=',$recipe['id'])->get()->toArray();
-        $step=new Step;
-        $steps=$step->where('recipe_id','=',$recipe['id'])->get()->toArray();
-        $like=Like::where('recipe_id', $recipe->id)->where('user_id',Auth::user()->id)->first();
-        $comment=new Comment;
-        $comments=$comment->join('users','comments.user_id','=','users.id')->where('recipe_id','=',$recipe['id'])->get()->toArray();
-        var_dump($comments);
-        return view('others_post',
-        [
-            'recipes'=>$recipes,
-            'users'=>$users,
-            'ingredients'=>$ingredients,
-            'steps'=>$steps,
-            'like'=>$like,
-            'comments'=>$comments,
-        ]);
-    }
-
-    public function my_page(User $user){
-        $users=$user->where('id','=',$user['id'])->get()->toArray();
-        $recipes=Auth::user()->recipes()->where('del_flg','=',1)->get()->toArray();
-        $likes=Like::where('likes.user_id',Auth::user()->id)->join('recipes','likes.recipe_id','=','recipes.id')->join('users','recipes.user_id','=','users.id')->get()->toArray();
-        $follower=Follow::where('following_id', $user['id'])->count();
-        $follow=Follow::where('follower_id', $user['id'])->count();
-        return view('my_page',
-        [
-            'users'=>$users,
-            'recipes'=>$recipes,
-            'likes'=>$likes,
-            'follower'=>$follower,
-            'follow'=>$follow,
-        ]);
-    }
-
-    public function others_page(User $user){
-        $users=$user->where('id','=',$user['id'])->get()->toArray();
-        $recipe=new Recipe;
-        $recipes=$recipe->where('del_flg','=',1)->where('user_id','=',$user['id'])->get()->toArray();
-        $likes=Like::where('likes.user_id',$user['id'])->join('recipes','likes.recipe_id','=','recipes.id')->join('users','recipes.user_id','=','users.id')->get()->toArray();
-        $myfollow=Follow::where('following_id', $user['id'])->where('follower_id',Auth::user()->id)->get()->toArray();
-        $follower=Follow::where('following_id', $user['id'])->count();
-        $follow=Follow::where('follower_id', $user['id'])->count();
-        var_dump($myfollow);
-        return view('others_page',
-        [
-            'users'=>$users,
-            'recipes'=>$recipes,
-            'likes'=>$likes,
-            'myfollow'=>$myfollow,
-            'follower'=>$follower,
-            'follow'=>$follow,
-        ]);
-    }
-
-    public function page(User $user){
-        $users=User::where('id',$user['id'])->get()->toArray();
-        $recipes=$user->recipes->toArray();
-        $likes=$user->likes()->join('recipes','recipe_id','=','recipes.id')->get()->toArray();
-        $follower=$user->following->count();
-        $follow=$user->follower->count();
-        var_dump($likes);
-        return view('page',
-        [
-            'users'=>$users,
-            'recipes'=>$recipes,
-            'likes'=>$likes,
-            'follower'=>$follower,
-            'follow'=>$follow,
-        ]);
-    }
-
+    //投稿のいいね、いいね取り消し
     public function add_like(Recipe $recipe){
         $like=new Like;
         $like->recipe_id=$recipe->id;
@@ -149,7 +24,6 @@ class DisplayController extends Controller
         $like->save();
         return back();
     }
-
     public function remove_like(Recipe $recipe){
         $user=Auth::user()->id;
         $like=Like::where('recipe_id',$recipe->id)->where('user_id',$user)->first();
@@ -157,6 +31,7 @@ class DisplayController extends Controller
         return back();
     }
 
+    //ユーザーのフォロー、フォロー取り消し
     public function add_follow(User $user){
         $follow=new Follow;
         $follow->following_id=$user->id;
@@ -164,7 +39,6 @@ class DisplayController extends Controller
         $follow->save();
         return back();
     }
-
     public function remove_follow(User $user){
         $users=Auth::user()->id;
         $follow=Follow::where('following_id',$user->id)->where('follower_id',$users)->first();
@@ -172,8 +46,9 @@ class DisplayController extends Controller
         return back();
     }
 
+    //フォロー一覧画面
     public function follow_view(User $user){
-        $myfollow=$user->follower->toArray();
+        $myfollow=Auth::user()->follower->toArray();
         $followings=$user->follower()->join('users','following_id','=','users.id')->where('deleted_at',null)->get()->toArray();
         $myfollow=array_column($myfollow,'following_id');
         return view('follow_view',
@@ -182,9 +57,9 @@ class DisplayController extends Controller
             'myfollow'=>$myfollow,
         ]);
     }
-
+    //フォロワー一覧画面
     public function follower_view(User $user){
-        $myfollow=$user->follower->toArray();
+        $myfollow=Auth::user()->follower->toArray();
         $followers=$user->following()->join('users','follower_id','=','users.id')->where('deleted_at',null)->get()->toArray();
         $myfollow=array_column($myfollow,'following_id');
         return view('follower_view',

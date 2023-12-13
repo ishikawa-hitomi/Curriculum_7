@@ -31,7 +31,7 @@
       <span class="my-navbar-item">{{Auth::user()->name}}</span>
       /
       <a href="#" id="logout" class="my-navbar-item">ログアウト</a>
-      <a href="{{route('index')}}">main</a>
+      <a href="{{route('recipe.index')}}">main</a>
       <form action="{{route('logout')}}" method="post" style="display:none;" id="logout-form">
           @csrf
       </form>
@@ -51,7 +51,7 @@
     <div class="row">
       <div class="left-content col-md-4 bg-success">
         <div>
-          <form action="{{route('index')}}" method="GET">
+          <form action="{{route('recipe.index')}}" method="GET">
             <input type="text" name="keyword" value="<?php if(url('/')==url()->current()) echo $keyword; ?>">
           スペースで複数の条件検索可能
             <div>
@@ -63,10 +63,10 @@
           </form>
         </div>
         <div>
-          <a href="{{route('recipe_create')}}">
+          <a href="{{route('recipe.create')}}">
             <button type='button'>新規投稿</button>
           </a>
-          <a href="{{route('my_page',['user'=>Auth::user()->id])}}">
+          <a href="{{route('user.show',['user'=>Auth::user()->id])}}">
             <button type='button'>マイページ</button>
           </a>
         </div>

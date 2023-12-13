@@ -3,12 +3,12 @@
   <div class="card">
     <h4 class="card-title">手順編集</h4>
     <div class="card-body">
-      <form action="{{route('step_edit',['recipe'=>$recipeid])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
+      <form action="{{route('step_edit',['recipe'=>$recipeId])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
         @csrf
         <a onclick=add() class="btn btn-sm btn-light">+追加</a>
         <div id="input_plural">
-          @foreach($recipes as $recipe)
-            @if($recipe === reset($recipes))
+          @foreach($steps as $step)
+            @if($step === reset($steps))
               <div class="card-group">
                 <div class="card">
                   <lavel for='sub_image' class="form-label">サブ画像</lavel>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="card">
                   <lavel for='procedure' class="form-label">手順</lavel>
-                  <textarea name='procedure[]' class="form-control" required>{{$recipe['procedure']}}</textarea>
+                  <textarea name='procedure[]' class="form-control" required>{{$step['procedure']}}</textarea>
                   <div class="invalid-feedback">
                     手順の入力は必須です
                   </div>
@@ -34,7 +34,7 @@
                   </div>
                 </div>
                 <div class="card">
-                  <textarea name='procedure[]' class="form-control" required>{{$recipe['procedure']}}</textarea>
+                  <textarea name='procedure[]' class="form-control" required>{{$step['procedure']}}</textarea>
                   <div class="invalid-feedback">
                     手順の入力は必須です
                   </div>
@@ -45,7 +45,7 @@
           @endforeach
         </div>
         <div>
-          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeid}}" required>
+          <input type='hidden' name='recipe_id' class="form-control" value="{{$recipeId}}" required>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>

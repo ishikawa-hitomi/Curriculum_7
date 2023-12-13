@@ -31,19 +31,7 @@ class Recipe extends Model
         return $this->hasMany(Like::class);
     }
 
-
-    public function getUser(){
-        $user=$this->user;
-        return $user;
-    }
-
-    public function getIngredients(){
-        $ingredients=$this->ingredients;
-        return $ingredients;
-    }
-
-    public function getSteps(){
-        $steps=$this->steps;
-        return $steps;
+    public function comments(){
+        return $this->hasMany(Comment::class);
     }
 }

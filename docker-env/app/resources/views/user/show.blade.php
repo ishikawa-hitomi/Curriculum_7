@@ -30,8 +30,8 @@
       </div>
   </div>
   @if($users[0]['id']==Auth::user()->id)
-    <a class="btn btn-outline-primary" role="button" href="{{route('profile_edit',['user'=>$users[0]['id']])}}">プロフィール情報編集</a>
-    <a class="btn btn-outline-primary" role="button" href="{{route('user_edit',['user'=>$users[0]['id']])}}">ユーザー情報編集</a>
+    <a class="btn btn-outline-primary" role="button" href="{{route('user.profile_edit',['user'=>$users[0]['id']])}}">プロフィール情報編集</a>
+    <a class="btn btn-outline-primary" role="button" href="{{route('user.edit',['user'=>$users[0]['id']])}}">ユーザー情報編集</a>
   @endif
   <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -44,9 +44,9 @@
           @foreach($users[0]['recipes'] as $recipe)
             <div class="col">
               <div class="card m-4">
-                <a href="{{route('post',['recipe'=>$recipe['id']])}}"><img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+                <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}"><img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
                 <div class="card-body">
-                  <a href="{{route('post',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
+                  <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
                 </div>
               </div>
             </div>
@@ -58,10 +58,10 @@
           @foreach($likes as $like)
             <div class="col">
               <div class="card m-4">
-                <a href="{{route('post',['recipe'=>$like['recipe_id']])}}"><img class="card-img-top" src="{{asset('storage/' . $like['main_image']) }}"></a>
+                <a href="{{route('recipe.show',['recipe'=>$like['recipe_id']])}}"><img class="card-img-top" src="{{asset('storage/' . $like['main_image']) }}"></a>
                 <div class="card-body">
-                  <a href="{{route('post',['recipe'=>$like['recipe_id']])}}" class="card-link">{{$like['display_title']}}</a>
-                  <a href="{{route('page',['user'=>$like['user_id']])}}" class="card-link"></a>
+                  <a href="{{route('recipe.show',['recipe'=>$like['recipe_id']])}}" class="card-link">{{$like['display_title']}}</a>
+                  <a href="{{route('user.show',['user'=>$like['user_id']])}}" class="card-link"></a>
                 </div>
               </div>
             </div>

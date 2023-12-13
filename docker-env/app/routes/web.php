@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\RegistrantionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,15 +18,15 @@ use App\Http\Controllers\RegistrantionController;
 |
 */
 Auth::routes();
-
 Route::group(['middleware'=>'auth'],function(){
-    Route::get('/', [DisplayController::class,'index'])->name('index');
-    Route::get('/my_page/{user}', [DisplayController::class,'my_page'])->name('my_page');
-    Route::get('/others_page/{user}', [DisplayController::class,'others_page'])->name('others_page');
-    Route::get('/page/{user}', [DisplayController::class,'page'])->name('page');
 
-    Route::get('/recipe/{recipe}/my_post', [DisplayController::class,'my_post'])->name('my_post');
-    Route::get('/recipe/{recipe}/others_post', [DisplayController::class,'others_post'])->name('others_post');
+    Route::resource('user',UserController::class)->only(['show', 'edit','update','destroy']);
+    Route::get('user/{user}/delete', [UserController::class,'delete_show'])->name('user.delete_show');
+    Route::get('user/{user}/profile', [UserController::class,'profile_edit'])->name('user.profile_edit');
+    Route::post('user/{user}/profile', [UserController::class,'profile_update'])->name('user.profile_update');
+
+    Route::resource('recipe',RecipeController::class);
+    Route::get('recipe/{recipe}/delete', [RecipeController::class,'delete_show'])->name('recipe.delete_show');
 
     Route::get('/add_like/{recipe}',[DisplayController::class,'add_like'])->name('add_like');
     Route::get('/remove_like/{recipe}',[DisplayController::class,'remove_like'])->name('remove_like');
@@ -34,26 +37,8 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/follow_view/{user}',[DisplayController::class,'follow_view'])->name('follow_view');
     Route::get('/follower_view/{user}',[DisplayController::class,'follower_view'])->name('follower_view');
 
-    Route::get('/recipe_create',[RegistrantionController::class,'recipe_create_form'])->name('recipe_create');
-    Route::post('/recipe_create',[RegistrantionController::class,'recipe_create']);
-
     Route::get('/tag_create',[RegistrantionController::class,'tag_create_form'])->name('tag_create');
     Route::post('/tag_create',[RegistrantionController::class,'tag_create']);
-
-    Route::get('/recipe_edit/{recipe}',[RegistrantionController::class,'recipe_edit_form'])->name('recipe_edit');
-    Route::post('/recipe_edit/{recipe}',[RegistrantionController::class,'recipe_edit']);
-
-    Route::get('/recipe_delete/{recipe}',[RegistrantionController::class,'recipe_delete_form'])->name('recipe_delete');
-    Route::post('/recipe_delete/{recipe}',[RegistrantionController::class,'recipe_delete']);
-
-    Route::get('/profile_edit/{user}',[RegistrantionController::class,'profile_edit_form'])->name('profile_edit');
-    Route::post('/profile_edit/{user}',[RegistrantionController::class,'profile_edit']);
-
-    Route::get('/user_edit/{user}',[RegistrantionController::class,'user_edit_form'])->name('user_edit');
-    Route::post('/user_edit/{user}',[RegistrantionController::class,'user_edit']);
-
-    Route::get('/user_delete/{user}',[RegistrantionController::class,'user_delete_form'])->name('user_delete');
-    Route::post('/user_delete/{user}',[RegistrantionController::class,'user_delete']);
 
     Route::get('/ingredient_create/{recipe}',[RegistrantionController::class,'ingredient_create_form'])->name('ingredient_create');
     Route::post('/ingredient_create/{recipe}',[RegistrantionController::class,'ingredient_create']);
@@ -70,6 +55,3 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/comment_create/{recipe}',[RegistrantionController::class,'comment_create_form'])->name('comment_create');
     Route::post('/comment_create/{recipe}',[RegistrantionController::class,'comment_create']);
 });
-
-Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
