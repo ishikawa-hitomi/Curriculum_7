@@ -5,7 +5,7 @@
     <div class="card-body">
       <form action="{{route('ingredient_create',['recipe'=>$recipeId])}}" method="post" class="needs-validation" novalidate>
         @csrf
-        <a onclick="add()" class="btn btn-sm btn-light">+追加</a>
+        <a onclick="add()" class="btn btn-sm btn-light">+追加</a><!-- 材料の数だけ項目を追加できる -->
         <div id="input_plural">
           <div class="card-group">
             <div class="card">

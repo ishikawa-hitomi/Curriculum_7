@@ -5,19 +5,19 @@
                 <h4 class="card-title">{{$recipes[0]['display_title']}}</h4>
                 <span class="badge rounded-pill bg-primary">{{$recipes[0]['tag']['name']}}</span>
                 <img class="card-img-top" src="{{asset('storage/' . $recipes[0]['main_image']) }}">
-                @if($recipes[0]['user_id']==Auth::user()->id)
+                @if($recipes[0]['user_id']==Auth::user()->id)<!-- 投稿者にのみ編集、削除ボタンを表示 -->
                 <a class="btn btn-outline-primary" role="button" href="{{route('recipe.edit',['recipe'=>$recipes[0]['id']])}}">編集</a>
                 <a class="btn btn-outline-primary" role="button" href="{{route('recipe.delete_show',['recipe'=>$recipes[0]['id']])}}">削除</a>
                 @else
                     <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}">
-                        @if($recipes[0]['user']['icon']===null)
+                        @if($recipes[0]['user']['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
                             <img class="col-sm-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
                         @else
                             <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $recipes[0]['user']['icon']) }}">
                         @endif
                     </a>
                     <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}">{{$recipes[0]['user']['name']}}</a>
-                    @if(in_array($recipes[0]['id'],$mylikes))
+                    @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
                     <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-success btn-sm">
                         いいねを消す
                         <span class="badge"></span>

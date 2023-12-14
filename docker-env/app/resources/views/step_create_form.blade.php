@@ -5,7 +5,7 @@
     <div class="card-body">
       <form action="{{route('step_create',['recipe'=>$recipeId])}}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
-        <a onclick=add() class="btn btn-sm btn-light">+追加</a>
+        <a onclick=add() class="btn btn-sm btn-light">+追加</a><!-- 項目を追加 -->
         <div id="input_plural">
           <div class="card-group">
             <div class="card">

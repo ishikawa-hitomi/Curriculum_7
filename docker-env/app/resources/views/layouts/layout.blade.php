@@ -49,7 +49,8 @@
   </header>
   <div class="main container-fluid">
     <div class="row">
-      <div class="left-content col-md-4 bg-success">
+      <div class="left-content col-md-4 bg-success"><!-- カラム（左） -->
+        @can('general')
         <div>
           <form action="{{route('recipe.index')}}" method="GET">
             <input type="text" name="keyword" value="<?php if(url('/')==url()->current()) echo $keyword; ?>">
@@ -70,15 +71,23 @@
             <button type='button'>マイページ</button>
           </a>
         </div>
-        左
+        @endcan
+        @can('admin')
+        <h5>管理者用画面</h5>
+        <a href="{{route('admin.index')}}">
+          <button>ユーザー検索</button>
+        </a>
+        <a href="#">
+          <button>投稿検索</button>
+        </a>
+        @endcan
       </div>
 
-      <div class="main-content col-md-7">
+      <div class="main-content col-md-7"><!-- カラム（メイン） -->
         @yield('content')
       </div>
 
-      <div class="right-content col-md-1 bg-info">
-        右
+      <div class="right-content col-md-1 bg-info"><!-- カラム（右） -->
       </div>
     </div>
   </div>

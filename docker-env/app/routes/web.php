@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\RegistrantionController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecipeController;
-use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +18,19 @@ use App\Http\Controllers\Auth\LoginController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::prefix('password_reset')->name('password_reset.')->group(function(){
+    Route::prefix('email')->name('email.')->group(function(){
+        Route::get('/',[PasswordController::class,'emailFormResetPassword'])->name('form');
+        Route::post('/',[PasswordController::class,'sendEmailResetPassword'])->name('send');
+        Route::get('/send_complete',[PasswordController::class,'sendComplete'])->name('send_complete');
+    });
+    Route::get('/edit',[PasswordController::class,'edit'])->name('edit');
+    Route::post('/update',[PasswordController::class,'update'])->name('update');
+    Route::get('/edited',[PasswordController::class,'edited'])->name('edited');
+});
+
 Auth::routes();
-Route::group(['middleware'=>'auth'],function(){
+Route::middleware(['auth'])->group(function(){
 
     Route::resource('user',UserController::class)->only(['show', 'edit','update','destroy']);
     Route::get('user/{user}/delete', [UserController::class,'delete_show'])->name('user.delete_show');
@@ -54,4 +66,9 @@ Route::group(['middleware'=>'auth'],function(){
 
     Route::get('/comment_create/{recipe}',[RegistrantionController::class,'comment_create_form'])->name('comment_create');
     Route::post('/comment_create/{recipe}',[RegistrantionController::class,'comment_create']);
+
+    Route::middleware(['can:admin'])->prefix('admin')->name('admin.')->group(function(){
+        Route::get('/index',[AdminController::class,'index'])->name('index');
+        Route::get('/show/{user}',[AdminController::class,'show'])->name('show');
+    });
 });

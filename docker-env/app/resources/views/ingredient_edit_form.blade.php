@@ -5,10 +5,10 @@
     <div class="card-body">
         <form action="{{route('ingredient_edit',['recipe'=>$recipeId])}}" method="post" class="was-validated" novalidate>
         @csrf
-        <a onclick="add()" class="btn btn-sm btn-light">+追加</a>
+        <a onclick="add()" class="btn btn-sm btn-light">+追加</a><!-- 項目を追加 -->
         <div id="input_plural">
           @foreach($ingredients as $ingredient)
-            @if($ingredient === reset($ingredients))
+            @if($ingredient === reset($ingredients))<!-- 最初のループでは削除ボタンを表示しない -->
               <div class="card-group">
                 <div class="card">
                   <lavel for='name' class="form-label">材料</lavel>
@@ -39,7 +39,7 @@
                     分量の入力は必須です
                   </div>
                 </div>
-                <input type="button" value="削除" onclick="del(this)">
+                <input type="button" value="削除" onclick="del(this)"><!-- 項目を削除 -->
               </div>
             @endif
           @endforeach

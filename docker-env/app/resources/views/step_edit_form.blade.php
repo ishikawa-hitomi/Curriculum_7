@@ -5,10 +5,10 @@
     <div class="card-body">
       <form action="{{route('step_edit',['recipe'=>$recipeId])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
         @csrf
-        <a onclick=add() class="btn btn-sm btn-light">+追加</a>
+        <a onclick=add() class="btn btn-sm btn-light">+追加</a><!-- 項目を追加 -->
         <div id="input_plural">
           @foreach($steps as $step)
-            @if($step === reset($steps))
+            @if($step === reset($steps))<!-- 最初のループでは削除ボタンを表示しない -->
               <div class="card-group">
                 <div class="card">
                   <lavel for='sub_image' class="form-label">サブ画像</lavel>
@@ -39,7 +39,7 @@
                     手順の入力は必須です
                   </div>
                 </div>
-                <input type="button" value="削除" onclick="del(this)">
+                <input type="button" value="削除" onclick="del(this)"><!-- 項目を削除 -->
               </div>
             @endif
           @endforeach
