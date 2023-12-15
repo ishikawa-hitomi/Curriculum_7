@@ -16,16 +16,18 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $users=User::withTrashed()->whereNotNull('id')->with('recipes','likes','follower','following')->get()->toArray();
+        $users=User::with('recipes','likes','follower','following')->get()->toArray();
+        $del_users=User::onlyTrashed()->whereNotNull('id')->with('recipes','likes','follower','following')->get()->toArray();
         return view('admin.index',
         [
             'users'=>$users,
+            'del_users'=>$del_users,
         ]);
     }
 
     public function show(User $user)
     {
-        $users=User::withTrashed()->whereNotNull('id')->where('users.id','=',$user['id'])->with('recipes','follower','following')->get()->toArray();
+        $users=User::where('users.id','=',$user['id'])->with('recipes','follower','following')->get()->toArray();
         var_dump($users);
         return view('admin.show',
         [
@@ -33,8 +35,15 @@ class AdminController extends Controller
         ]);
     }
 
-    public function destroy(User $user)
+    public function forceDelete(User $user)
     {
         //完全削除
+    }
+
+    public function restore(User $user)
+    {
+        User::onlyTrashed()->whereNotNull('id')->where('users.id','=',$user['id'])->restore();
+        return redirect(route('admin.index'));
+
     }
 }

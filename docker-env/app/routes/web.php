@@ -70,5 +70,6 @@ Route::middleware(['auth'])->group(function(){
     Route::middleware(['can:admin'])->prefix('admin')->name('admin.')->group(function(){
         Route::get('/index',[AdminController::class,'index'])->name('index');
         Route::get('/show/{user}',[AdminController::class,'show'])->name('show');
+        Route::post('/restore/{user}',[AdminController::class,'restore'])->name('restore');
     });
 });
