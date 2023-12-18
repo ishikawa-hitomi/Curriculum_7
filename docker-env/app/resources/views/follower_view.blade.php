@@ -14,19 +14,21 @@
             <p class="col-sm-4">{{$user['profile']}}</p>
           </div>
         </a>
-        @if($user['follower_id']!=Auth::user()->id)
-          @if(in_array($user['follower_id'],$myfollow))<!-- フォロー機能 -->
-            <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-2">
-              フォローを消す
-              <span class="badge"></span>
-            </a>
-          @else
-            <a href="{{ route('add_follow',['user'=>$user['id']])}}" class="btn btn-secondary btn-sm col-sm-2">
-              フォローをつける
-              <span class="badge"></span>
-            </a>
+        @can('general')
+          @if($user['follower_id']!=Auth::user()->id)
+            @if(in_array($user['follower_id'],$myfollow))<!-- フォロー機能 -->
+              <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-success btn-sm col-sm-2">
+                フォローを消す
+                <span class="badge"></span>
+              </a>
+            @else
+              <a href="{{ route('add_follow',['user'=>$user['id']])}}" class="btn btn-secondary btn-sm col-sm-2">
+                フォローをつける
+                <span class="badge"></span>
+              </a>
+            @endif
           @endif
-        @endif
+        @endcan
       </div>
     </div>
   @endforeach

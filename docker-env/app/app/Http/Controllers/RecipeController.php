@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Ingredient;
 use App\Models\Step;
 use App\Models\Comment;
+use App\Models\Like;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,27 +18,33 @@ class RecipeController extends Controller
     //メイン画面、検索結果画面
     public function index(Request $request)
     {
-        $recipes=Recipe::with('user')->where('deleted_at',null);
-        $keyword=$request->input('keyword');
-        $from=$request->input('from');
-        $to=$request->input('to');
-        if(!empty($keyword)){
-            $spaceConversion = mb_convert_kana($keyword, 's');
-            $wordArray = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
-            foreach($wordArray as $word){
-                $recipes->where('display_title','LIKE','%'.$word.'%')->orwhere('title','LIKE','%'.$word.'%');
+        $recipes=Recipe::with('user')->whereNull('recipes.deleted_at');
+        //新着レシピ6件
+        $new_recipes=$recipes->latest()->take(6)->get()->toArray();
+        //いいねが多いレシピ6件
+        $good_recipes=
+        //検索があった場合
+            $keyword=e($request->input('keyword'));
+            $from=e($request->input('from'));
+            $to=e($request->input('to'));
+            if(!empty($keyword)){
+                $spaceConversion = mb_convert_kana($keyword, 's');
+                $wordArray = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
+                foreach($wordArray as $word){
+                    $recipes->where('display_title','LIKE','%'.$word.'%')->orwhere('title','LIKE','%'.$word.'%');
+                }
             }
-        }
-        if(!empty($from)){
-            $recipes->where('recipes.created_at','>=',$from);
-        }
-        if(!empty($to)){
-            $recipes->where('recipes.created_at','<=',$to);
-        }
-        $recipes=$recipes->get()->toArray();
+            if(!empty($from)){
+                $recipes->where('recipes.created_at','>=',$from);
+            }
+            if(!empty($to)){
+                $recipes->where('recipes.created_at','<=',$to);
+            }
+            $search_recipes=$recipes->take(6)->get()->toArray();
         return view('recipe.index',
         [
-            'recipes'=>$recipes,
+            'search_recipes'=>$search_recipes,
+            'new_recipes'=>$new_recipes,
             'keyword'=>$keyword,
             'from'=>$from,
             'to'=>$to,
@@ -59,12 +66,13 @@ class RecipeController extends Controller
         $recipe=new Recipe;
         $columns=['display_title','title','time','serve','tag_id','memo'];
         foreach($columns as $column){
-            $recipe->$column=$request->$column;
+            $recipe->$column=e($request->$column);
         }
+        $recipe->user_id=Auth::user()->id;
         $image_path=$request->file('main_image')->store('public');
         $recipe->main_image=basename($image_path);
-        Auth::user()->recipes()->save($recipe);
-        return redirect('/ingredient_create/'.$recipe['id']);
+        session()->put('recipe',$recipe);
+        return redirect(route('ingredient.create'));
     }
 
     //投稿詳細画面
@@ -96,7 +104,7 @@ class RecipeController extends Controller
     {
         $columns=['display_title','title','time','serve','tag_id','memo'];
         foreach($columns as $column){
-            $recipe->$column=$request->$column;
+            $recipe->$column=e($request->$column);
         }
         $image_path=$request->file('main_image');
         if(isset($image_path)){
@@ -105,7 +113,7 @@ class RecipeController extends Controller
             $recipe->main_image=basename($image_path);
         }
         Auth::user()->recipes()->save($recipe);
-        return redirect('/ingredient_edit/'.$recipe['id']);
+        return redirect(route('ingredient.edit',['recipe'=>$recipe['id']]));
     }
 
     //投稿削除確認画面
@@ -119,7 +127,12 @@ class RecipeController extends Controller
     //投稿倫理削除
     public function destroy(Recipe $recipe)
     {
-        $recipe->delete();
-        return redirect(route('recipe.index'));
+        $user=$recipe['user_id'];
+        Recipe::find($recipe['id'])->delete();
+        Step::where('recipe_id',$recipe['id'])->delete();
+        Ingredient::where('recipe_id',$recipe['id'])->delete();
+        Comment::where('recipe_id',$recipe['id'])->delete();
+        Like::where('recipe_id',$recipe['id'])->delete();
+        return redirect(route('user.show',['user'=>$user]));
     }
 }

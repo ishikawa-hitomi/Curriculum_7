@@ -13,7 +13,7 @@
       @csrf
       <div>
         <lavel for='name' class="form-label">タグの名前</lavel>
-        <input type='text' name='name' id='name' class="form-control" required>
+        <input type='text' name='name' id='name' class="form-control" maxlength=10 required>
         <div class="invalid-feedback">
           Please choose a username.
         </div>

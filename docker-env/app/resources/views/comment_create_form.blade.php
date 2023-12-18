@@ -8,7 +8,7 @@
       @csrf
       <div>
         <lavel for='comment' class="form-label">コメント</lavel>
-        <textarea name='comment' class="form-control" required></textarea>
+        <textarea name='comment' class="form-control" required maxlangth=255></textarea>
         <div class="invalid-feedback">
           コメントの入力は必須です
         </div>

@@ -7,7 +7,7 @@
         @method('PUT')
         <div>
           <lavel for='name' class="form-label">ユーザー名</lavel>
-            <input type='text' name='name' value="{{$user['name']}}" class="form-control" required>
+            <input type='text' name='name' value="{{$user['name']}}" class="form-control" maxlength=10 required>
             <div class="invalid-feedback">
                 ユーザー名の入力は必須です
             </div>
@@ -21,7 +21,7 @@
         </div>
         <input type='submit' class="btn btn-primary">
       </form>
-      <a href="{{route('password.request')}}">パスワード変更はこちらから</a>
+      <a href="{{route('password_reset.email.form')}}">パスワード変更はこちらから</a>
       <a href="{{route('user.delete_show',['user'=>Auth::user()->id])}}">アカウント削除はこちらから</a>
     </div>
   @endforeach

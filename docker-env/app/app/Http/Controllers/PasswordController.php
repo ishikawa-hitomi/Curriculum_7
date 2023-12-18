@@ -87,7 +87,7 @@ class PasswordController extends Controller
     {
         try {
             $userToken = $this->userTokenRepository->getUserTokenfromToken($request->reset_token);
-            $this->userRepository->updateUserPassword($request->password, $userToken->user_id);
+            $this->userRepository->updateUserPassword(e($request->password), $userToken->user_id);
             Log::info(__METHOD__ . '...ID:' . $userToken->user_id . 'のユーザーのパスワードを更新しました。');
         } catch (Exception $e) {
             Log::error(__METHOD__ . '...ユーザーのパスワードの更新に失敗しました。...error_message = ' . $e);

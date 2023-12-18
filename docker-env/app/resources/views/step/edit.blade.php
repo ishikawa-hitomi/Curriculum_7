@@ -3,8 +3,9 @@
   <div class="card">
     <h4 class="card-title">手順編集</h4>
     <div class="card-body">
-      <form action="{{route('step_edit',['recipe'=>$recipeId])}}" method="post" class="was-validated" novalidate enctype="multipart/form-data">
+      <form action="{{route('step.update',['recipe'=>$recipeId])}}" method="post" class="was-validated" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
         <a onclick=add() class="btn btn-sm btn-light">+追加</a><!-- 項目を追加 -->
         <div id="input_plural">
           @foreach($steps as $step)
@@ -19,7 +20,7 @@
                 </div>
                 <div class="card">
                   <lavel for='procedure' class="form-label">手順</lavel>
-                  <textarea name='procedure[]' class="form-control" required>{{$step['procedure']}}</textarea>
+                  <textarea name='procedure[]' class="form-control" maxlength=255 required>{{$step['procedure']}}</textarea>
                   <div class="invalid-feedback">
                     手順の入力は必須です
                   </div>
@@ -84,6 +85,7 @@
       var input2 = document.createElement('textarea');
       input2.classList.add('form-control');
       input2.setAttribute('name', 'procedure[]');
+      input2.setAttribute('maxlength', 255);
       input2.setAttribute('required', true);
       div2.appendChild(input2);
 

@@ -17,18 +17,23 @@
                         @endif
                     </a>
                     <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}">{{$recipes[0]['user']['name']}}</a>
-                    @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
-                    <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-success btn-sm">
-                        いいねを消す
-                        <span class="badge"></span>
-                    </a>
-                    @else
-                    <a href="{{ route('add_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-secondary btn-sm">
-                        いいねをつける
-                        <span class="badge"></span>
-                    </a>
-                    @endif
-                    <a href="{{route('comment_create',['recipe'=>$recipes[0]['id']])}}" class="btn btn-primary btn-sm">コメントを投稿する</a>
+                    @can('admin')
+                        <a class="btn btn-danger" role="button" href="#">完全に削除</a>
+                    @endcan
+                    @can('general')
+                        @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
+                        <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-success btn-sm">
+                            いいねを消す
+                            <span class="badge"></span>
+                        </a>
+                        @else
+                        <a href="{{ route('add_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-secondary btn-sm">
+                            いいねをつける
+                            <span class="badge"></span>
+                        </a>
+                        @endif
+                        <a href="{{route('comment_create',['recipe'=>$recipes[0]['id']])}}" class="btn btn-primary btn-sm">コメントを投稿する</a>
+                    @endcan
                 @endif
                 <div class="card-group">
                     <div class="card">

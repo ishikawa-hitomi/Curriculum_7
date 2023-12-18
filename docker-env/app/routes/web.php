@@ -7,6 +7,8 @@ use App\Http\Controllers\RegistrantionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\StepController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,13 +34,17 @@ Route::prefix('password_reset')->name('password_reset.')->group(function(){
 Auth::routes();
 Route::middleware(['auth'])->group(function(){
 
-    Route::resource('user',UserController::class)->only(['show', 'edit','update','destroy']);
+    Route::resource('user',UserController::class)->only(['show','edit','update','destroy']);
     Route::get('user/{user}/delete', [UserController::class,'delete_show'])->name('user.delete_show');
     Route::get('user/{user}/profile', [UserController::class,'profile_edit'])->name('user.profile_edit');
     Route::post('user/{user}/profile', [UserController::class,'profile_update'])->name('user.profile_update');
 
     Route::resource('recipe',RecipeController::class);
     Route::get('recipe/{recipe}/delete', [RecipeController::class,'delete_show'])->name('recipe.delete_show');
+
+    Route::resource('ingredient',IngredientController::class)->only(['create','store','edit','update'])->parameters(['ingredient' => 'recipe']);
+
+    Route::resource('step',StepController::class)->only(['create','store','edit','update'])->parameters(['step' => 'recipe']);
 
     Route::get('/add_like/{recipe}',[DisplayController::class,'add_like'])->name('add_like');
     Route::get('/remove_like/{recipe}',[DisplayController::class,'remove_like'])->name('remove_like');
@@ -52,24 +58,13 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/tag_create',[RegistrantionController::class,'tag_create_form'])->name('tag_create');
     Route::post('/tag_create',[RegistrantionController::class,'tag_create']);
 
-    Route::get('/ingredient_create/{recipe}',[RegistrantionController::class,'ingredient_create_form'])->name('ingredient_create');
-    Route::post('/ingredient_create/{recipe}',[RegistrantionController::class,'ingredient_create']);
-
-    Route::get('/step_create/{recipe}',[RegistrantionController::class,'step_create_form'])->name('step_create');
-    Route::post('/step_create/{recipe}',[RegistrantionController::class,'step_create']);
-
-    Route::get('/ingredient_edit/{recipe}',[RegistrantionController::class,'ingredient_edit_form'])->name('ingredient_edit');
-    Route::post('/ingredient_edit/{recipe}',[RegistrantionController::class,'ingredient_edit']);
-
-    Route::get('/step_edit/{recipe}',[RegistrantionController::class,'step_edit_form'])->name('step_edit');
-    Route::post('/step_edit/{recipe}',[RegistrantionController::class,'step_edit']);
-
     Route::get('/comment_create/{recipe}',[RegistrantionController::class,'comment_create_form'])->name('comment_create');
     Route::post('/comment_create/{recipe}',[RegistrantionController::class,'comment_create']);
 
     Route::middleware(['can:admin'])->prefix('admin')->name('admin.')->group(function(){
-        Route::get('/index',[AdminController::class,'index'])->name('index');
-        Route::get('/show/{user}',[AdminController::class,'show'])->name('show');
-        Route::post('/restore/{user}',[AdminController::class,'restore'])->name('restore');
+        Route::get('/user_index',[AdminController::class,'user_index'])->name('user_index');
+        Route::get('/del_user_index',[AdminController::class,'del_user_index'])->name('del_user_index');
+        Route::get('/recipe_index',[AdminController::class,'recipe_index'])->name('recipe_index');
+        Route::get('/del_recipe_index',[AdminController::class,'del_recipe_index'])->name('del_recipe_index');
     });
 });

@@ -1,9 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
-        <h1>パスワードリセットメールを送信しました。</h1>
-
-        <a href="{{ route('login') }}">ログイン画面へ</a>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">パスワードリセットメールを送信しました。</div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

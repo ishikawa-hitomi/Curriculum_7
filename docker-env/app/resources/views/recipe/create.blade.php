@@ -14,28 +14,28 @@
         </div>
         <div>
           <lavel for='display_title' class="form-label">表示用タイトル</lavel>
-          <input type='text' name='display_title' class="form-control" value="{{old('display_title')}}"placeholder="卵を使用しないで作れる！簡単ふわふわスフレパンケーキ" required>
+          <input type='text' name='display_title' class="form-control" value="{{old('display_title')}}"placeholder="卵を使用しないで作れる！簡単ふわふわスフレパンケーキ" maxlength=40 required>
           <div class="invalid-feedback">
             表示用タイトルの入力は必須です
           </div>
         </div>
         <div>
           <lavel for='title' lass="form-label">料理名</lavel>
-          <input type='text' name='title' class="form-control" value="{{old('title')}}" placeholder="パンケーキ" required>
+          <input type='text' name='title' class="form-control" value="{{old('title')}}" placeholder="パンケーキ" maxlength=20 required>
           <div class="invalid-feedback">
             料理名の入力は必須です
           </div>
         </div>
         <div>
           <lavel for='time' lass="form-label">調理時間目安</lavel>
-          <input type='number' name='time' class="form-control" value="{{old('time')}}" required>
+          <input type='number' name='time' class="form-control" value="{{old('time')}}" min=1 required>
           <div class="invalid-feedback">
             調理目安時間の入力は必須です
           </div>
         </div>
         <div>
           <lavel for='serve' lass="form-label">人数目安</lavel>
-          <input type='number' name='serve' class="form-control" value="{{old('serve')}}" required>
+          <input type='number' name='serve' class="form-control" value="{{old('serve')}}" min=1 required>
           <div class="invalid-feedback">
             人数目安の入力は必須です
           </div>
@@ -55,7 +55,7 @@
         </div>
         <div>
           <lavel for='memo' lass="form-label">メモ</lavel>
-          <textarea name='memo' class="form-control">{{old('memo')}}</textarea>
+          <textarea name='memo' class="form-control" maxlength=255>{{old('memo')}}</textarea>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>

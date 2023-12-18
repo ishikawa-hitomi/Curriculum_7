@@ -26,11 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //if(Auth::user()->role == 1){
-        protected $redirectTo = '/recipe';
-    //}else{
-        //protected $redirectTo = '/recipe';
-    //}
+    protected $redirectTo = '/recipe';
 
     protected function loggedOut(\Illuminate\Http\Request $request) {
         return redirect(route('login'));

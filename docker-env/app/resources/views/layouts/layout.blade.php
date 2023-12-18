@@ -49,45 +49,53 @@
   </header>
   <div class="main container-fluid">
     <div class="row">
-      <div class="left-content col-md-4 bg-success"><!-- カラム（左） -->
+      <div class="left-content col-lg-4 bg-success"><!-- カラム（左） -->
         @can('general')
-        <div>
+        <div class="container-fluid ">
           <form action="{{route('recipe.index')}}" method="GET">
-            <input type="text" name="keyword" value="<?php if(url('/')==url()->current()) echo $keyword; ?>">
-          スペースで複数の条件検索可能
             <div>
-              <input type="date" name="from" value="<?php if(url('/')==url()->current()) echo $from; ?>">
-              -
-              <input type="date" name="to" value="<?php if(url('/')==url()->current()) echo $to; ?>">
+              <label class="keyword">キーワード</label>
+              <input type="text" name="keyword" class="form-control" value="{{e(request()->input('keyword'))}}">
+              <small>スペースで複数の条件検索可能</small>
             </div>
-            <input type="submit" value="検索">
+            <div>
+              <label class="date">投稿日</label>
+              <div class="input-group">
+                <input type="date" name="from" class="form-control" value="{{e(request()->input('from'))}}">
+                〜
+                <input type="date" name="to" class="form-control" value="{{e(request()->input('to'))}}">
+              </div>
+            </div>
+            <input type="submit" value="検索" class="btn btn-primary">
           </form>
         </div>
-        <div>
+        <div class="container-fluid">
           <a href="{{route('recipe.create')}}">
-            <button type='button'>新規投稿</button>
+            <button type='button' class="btn btn-primary">新規投稿</button>
           </a>
           <a href="{{route('user.show',['user'=>Auth::user()->id])}}">
-            <button type='button'>マイページ</button>
+            <button type='button' class="btn btn-primary">マイページ</button>
           </a>
         </div>
         @endcan
         @can('admin')
         <h5>管理者用画面</h5>
-        <a href="{{route('admin.index')}}">
+        <a href="{{route('admin.user_index')}}">
           <button>ユーザー検索</button>
         </a>
-        <a href="#">
+        <a href="{{route('admin.recipe_index')}}">
           <button>投稿検索</button>
         </a>
         @endcan
       </div>
 
-      <div class="main-content col-md-7"><!-- カラム（メイン） -->
-        @yield('content')
+      <div class="main-content col-lg-7"><!-- カラム（メイン） -->
+        <div class="container-fluid">
+          @yield('content')
+        </div>
       </div>
 
-      <div class="right-content col-md-1 bg-info"><!-- カラム（右） -->
+      <div class="right-content col-lg-1 bg-info"><!-- カラム（右） -->
       </div>
     </div>
   </div>

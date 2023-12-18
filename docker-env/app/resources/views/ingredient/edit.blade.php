@@ -3,8 +3,9 @@
   <div class="card">
     <h4 class="card-title">材料・分量登録</h4>
     <div class="card-body">
-        <form action="{{route('ingredient_edit',['recipe'=>$recipeId])}}" method="post" class="was-validated" novalidate>
+        <form action="{{route('ingredient.update',['recipe'=>$recipeId])}}" method="post" class="was-validated">
         @csrf
+        @method('PUT')
         <a onclick="add()" class="btn btn-sm btn-light">+追加</a><!-- 項目を追加 -->
         <div id="input_plural">
           @foreach($ingredients as $ingredient)
@@ -12,14 +13,14 @@
               <div class="card-group">
                 <div class="card">
                   <lavel for='name' class="form-label">材料</lavel>
-                  <input type='text' name='name[]' class="form-control" value="{{$ingredient['name']}}" placeholder="卵" required>
+                  <input type='text' name='name[]' class="form-control" value="{{$ingredient['name']}}" placeholder="卵" maxlength=15 required>
                   <div class="invalid-feedback">
                     材料の入力は必須です
                   </div>
                 </div>
                 <div class="card">
-                  <lavel for='quantity' class="form-label">材料</lavel>
-                  <input type='text' name='quantity[]' class="form-control" value="{{$ingredient['quantity']}}" placeholder="1個" required>
+                  <lavel for='quantity' class="form-label">分量</lavel>
+                  <input type='text' name='quantity[]' class="form-control" value="{{$ingredient['quantity']}}" placeholder="1個" maxlength=10 required>
                   <div class="invalid-feedback">
                     分量の入力は必須です
                   </div>
@@ -28,13 +29,13 @@
             @else
               <div class="card-group">
                 <div class="card">
-                  <input type='text' name='name[]' class="form-control" value="{{$ingredient['name']}}" placeholder="卵" required>
+                  <input type='text' name='name[]' class="form-control" value="{{$ingredient['name']}}" placeholder="卵" maxlength=15 required>
                   <div class="invalid-feedback">
                     材料の入力は必須です
                   </div>
                 </div>
                 <div class="card">
-                  <input type='text' name='quantity[]' class="form-control" value="{{$ingredient['quantity']}}" placeholder="1個" required>
+                  <input type='text' name='quantity[]' class="form-control" value="{{$ingredient['quantity']}}" placeholder="1個" maxlength=10 required>
                   <div class="invalid-feedback">
                     分量の入力は必須です
                   </div>
@@ -68,6 +69,7 @@
       var input1 = document.createElement('INPUT');
       input1.classList.add('form-control');
       input1.setAttribute('name', 'name[]');
+      input1.setAttribute('maxlength', 15);
       input1.setAttribute('required', true);
       div1.appendChild(input1);
 
@@ -83,6 +85,7 @@
       var input2 = document.createElement('INPUT');
       input2.classList.add('form-control');
       input2.setAttribute('name', 'quantity[]');
+      input1.setAttribute('maxlength', 10);
       input2.setAttribute('required', true);
       div2.appendChild(input2);
 

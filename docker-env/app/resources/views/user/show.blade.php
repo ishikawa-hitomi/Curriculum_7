@@ -9,20 +9,28 @@
           <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $users[0]['icon']) }}">
         @endif
         <p>{{$users[0]['profile']}}</p>
-        @if($users[0]['id']==Auth::user()->id)
-        @else<!-- フォロー機能 -->
-          @if(in_array($users[0]['id'],$myfollow))
-            <a href="{{ route('remove_follow',['user'=>$users[0]['id']])}}" class="btn btn-success btn-sm">
-              フォローを消す
-              <span class="badge"></span>
-            </a>
-          @else
-            <a href="{{ route('add_follow',['user'=>$users[0]['id']])}}" class="btn btn-secondary btn-sm">
-              フォローをつける
-              <span class="badge"></span>
-            </a>
+        @can('admin')<!-- ユーザー削除　ここはあとで完全削除に差し替える -->
+          <form action="{{route('user.destroy',['user'=>$users[0]['id']])}}" method="post">
+            @csrf
+            @method('DELETE')
+            <input type="submit" value="ユーザーを削除する">
+          </form>
+        @endcan
+        @can('general')
+          @if($users[0]['id']!=Auth::user()->id)<!-- フォロー機能 -->
+            @if(in_array($users[0]['id'],$myfollow))
+              <a href="{{ route('remove_follow',['user'=>$users[0]['id']])}}" class="btn btn-success btn-sm">
+                フォローを消す
+                <span class="badge"></span>
+              </a>
+            @else
+              <a href="{{ route('add_follow',['user'=>$users[0]['id']])}}" class="btn btn-secondary btn-sm">
+                フォローをつける
+                <span class="badge"></span>
+              </a>
+            @endif
           @endif
-        @endif
+        @endcan
       </div>
       <div class="nav">
         <a class="nav-link" href="{{route('follow_view',['user'=>$users[0]['id']])}}">フォロー<br>{{$follow}}</a>

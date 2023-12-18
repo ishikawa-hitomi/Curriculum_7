@@ -49,7 +49,7 @@ class DisplayController extends Controller
     //フォロー一覧画面
     public function follow_view(User $user){
         $myfollow=Auth::user()->follower->toArray();
-        $followings=$user->follower()->join('users','following_id','=','users.id')->where('deleted_at',null)->get()->toArray();
+        $followings=$user->follower()->join('users','following_id','=','users.id')->whereNull('users.deleted_at')->get()->toArray();
         $myfollow=array_column($myfollow,'following_id');
         return view('follow_view',
         [
@@ -60,7 +60,7 @@ class DisplayController extends Controller
     //フォロワー一覧画面
     public function follower_view(User $user){
         $myfollow=Auth::user()->follower->toArray();
-        $followers=$user->following()->join('users','follower_id','=','users.id')->where('deleted_at',null)->get()->toArray();
+        $followers=$user->following()->join('users','follower_id','=','users.id')->whereNull('users.deleted_at')->get()->toArray();
         $myfollow=array_column($myfollow,'following_id');
         return view('follower_view',
         [

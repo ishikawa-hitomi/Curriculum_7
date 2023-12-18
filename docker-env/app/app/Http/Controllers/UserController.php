@@ -9,11 +9,10 @@ use App\Models\User;
 use App\Models\Ingredient;
 use App\Models\Step;
 use App\Models\Comment;
+use App\Models\Follow;
 use App\Models\Like;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\CreateData;
-use App\Http\Requests\UserData;
 use App\Http\Requests;
 
 class UserController extends Controller
@@ -22,11 +21,11 @@ class UserController extends Controller
     public function show(User $user)
     {
         $users=User::where('id',$user['id'])->with('recipes','follower')->get()->toArray();
-        $likes=Like::where('likes.user_id',$user['id'])->whereNull('deleted_at')->join('recipes','recipe_id','=','recipes.id')->get()->toArray();
+        $likes=Like::where('likes.user_id',$user['id'])->whereNull('recipes.deleted_at')->join('recipes','recipe_id','=','recipes.id')->get()->toArray();
         $myfollow=Auth::user()->follower->toArray();
         $myfollow=array_column($myfollow,'following_id');
-        $follower=$user->following()->join('users','follower_id','=','users.id')->where('deleted_at',null)->count();
-        $following=$user->follower()->join('users','following_id','=','users.id')->where('deleted_at',null)->count();
+        $follower=$user->following()->join('users','follower_id','=','users.id')->whereNull('users.deleted_at')->count();
+        $following=$user->follower()->join('users','following_id','=','users.id')->whereNull('users.deleted_at')->count();
         return view('user.show',
         [
             'users'=>$users,
@@ -50,7 +49,7 @@ class UserController extends Controller
     {
         $columns=['name','email'];
         foreach($columns as $column){
-            $user->$column=$request->$column;
+            $user->$column=e($request->$column);
         }
         $user->save();
         return redirect()->route('user.show',['user'=>Auth::user()->id]);
@@ -69,7 +68,7 @@ class UserController extends Controller
     {
         $columns=['profile'];
         foreach($columns as $column){
-            $user->$column=$request->$column;
+            $user->$column=e($request->$column);
         }
         $image_path=$request->file('icon');
         if(isset($image_path)){
@@ -92,9 +91,23 @@ class UserController extends Controller
     //アカウント削除
     public function destroy(User $user)
     {
+        $recipes=$user->recipes->toArray();
+        foreach($recipes as $recipe){
+            Recipe::find($recipe['id'])->delete();
+            Step::where('recipe_id',$recipe['id'])->delete();
+            Ingredient::where('recipe_id',$recipe['id'])->delete();
+            Comment::where('recipe_id',$recipe['id'])->delete();
+            Like::where('recipe_id',$recipe['id'])->delete();
+        }
+        Comment::where('user_id',$user['id'])->delete();
+        Like::where('user_id',$user['id'])->delete();
+        Follow::where('follower_id',$user['id'])->orwhere('following_id',$user['id'])->delete();
         $user->delete();
-        Recipe::where('user_id','=',$user['id'])->delete();
-        Auth::logout();
-        return redirect(route('login'));
+        if(Auth::user()->role==0){
+            return redirect(route('admin.user_index'));
+        }else{
+            Auth::logout();
+            return redirect(route('login'));
+        }
     }
 }
