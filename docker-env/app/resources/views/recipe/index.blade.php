@@ -1,84 +1,88 @@
 @extends('layouts.layout')
 @section('content')
-  @foreach($new_recipes as $recipe)
-        <div class="card mb-3">
-          <div class="row">
-            <div class="col-sm-5">
-              <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}">
-                <img class="img-fluid h-100" style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}">
-              </a>
-            </div>
-            <div class="col-sm-7">
-              <div class="card-body">
-                <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}" class="nav-link link-dark">
-                  <small>{{substr($recipe['created_at'],0,10)}}</small>
-                  <h5 class="card-title">{{$recipe['display_title']}}</h5>
-                  <p class="card-text">{{$recipe['memo']}}</P>
+  @if(!empty($keyword)||!empty($from)||!empty($to))
+    <div class="card mb-3">
+      <h4 class="card-title text-center">@if(!empty($keyword))"{{$keyword}}" @endif @if(!empty($from))"{{$from}}" @endif @if(!empty($to))"{{$to}}" @endifの検索結果</h4>
+      <div class="card-body">
+        @foreach($search_recipes as $recipe)
+          <div class="card mb-3">
+            <div class="row">
+              <div class="col-sm-5">
+                <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}">
+                  <img class="img-fluid h-100" style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}">
                 </a>
-                <a href="{{route('user.show',['user'=>$recipe['user_id']])}}" class="nav-link link-dark">
-                  @if(is_null($recipe['user']['icon']))
-                    <img class="col-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
-                  @else
-                    <img class="col-1 rounded-circle" src="{{asset('storage/' . $recipe['user']['icon']) }}">
-                  @endif
-                  {{$recipe['user']['name']}}
-                </a>
+              </div>
+              <div class="col-sm-7">
+                <div class="card-body">
+                  <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}" class="nav-link link-dark">
+                    <small>{{substr($recipe['created_at'],0,10)}}</small>
+                    <h5 class="card-title">{{$recipe['display_title']}}</h5>
+                    <p class="card-text">{{$recipe['memo']}}</P>
+                  </a>
+                  <a href="{{route('user.show',['user'=>$recipe['user_id']])}}" class="nav-link link-dark">
+                    @if(is_null($recipe['user']['icon']))
+                      <img class="col-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
+                    @else
+                      <img class="col-1 rounded-circle" src="{{asset('storage/' . $recipe['user']['icon']) }}">
+                    @endif
+                    {{$recipe['user']['name']}}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-  @endforeach
-
-<div class="card">
-    <h4 class="card-title text-center">新着レシピ</h4>
-  <div class="card-body">
-    <div id="carouselExampleCaptions" class="carousel slide" data-pause="true">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        @endforeach
       </div>
-      <div class="carousel-inner">
-        <div class="carousel-item px-5 active">
-          <div class="row">
-            @for($a=0; $a<=2; $a++)
-              <div class="col-4">
-                <div class="card">
-                  <img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $new_recipes[$a]['main_image']) }}">
-                  <div class="card-body">
-                    <h5>{{$new_recipes[$a]['display_title']}}</h5>
-                    <p>{{$new_recipes[$a]['user']['name']}}</p>
-                  </div>
-                </div>
-              </div>
-            @endfor
-          </div>
-        </div>
-        <div class="carousel-item px-5">
-          <div class="row">
-            @for($a=3; $a<=5; $a++)
-              <div class="col-4">
-                <div class="card">
-                  <img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $new_recipes[$a]['main_image']) }}">
-                  <div class="card-body">
-                    <h5>{{$new_recipes[$a]['display_title']}}</h5>
-                    <p>{{$new_recipes[$a]['user']['name']}}</p>
-                  </div>
-                </div>
-              </div>
-            @endfor
-          </div>
-        </div>
+      <div class="d-flex justify-content-center">
+        {!! $search_recipes->appends(['keyword' => $keyword,'from' => $from,'to' => $to])->onEachSide(2)->render() !!}
       </div>
     </div>
+  @endif
+
+<div class="card">
+  <h4 class="card-title text-center">新着レシピ</h4>
+  <div class="card-body">
+    <div class="slider">
+        @foreach($new_recipes as $recipe)
+          <div class="card">
+            <p class="text-center">{{substr($recipe['created_at'],0,10)}}</p>
+            <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}"><img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+            <div class="card-body">
+              <h5>{{$recipe['display_title']}}</h5>
+              <p>いいね:{{count($recipe['likes'])}}</p>
+              <p>{{$recipe['user']['name']}}</p>
+            </div>
+          </div>
+        @endforeach
+    </div>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
 </div>
 
+<div class="card">
+  <h4 class="card-title text-center">いいねが多いレシピ</h4>
+  <div class="card-body">
+    <div class="slider">
+        @foreach($good_recipes as $recipe)
+          <div class="card">
+            <p class="text-center">{{$loop->index+1}}位</p>
+            <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}"><img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+            <div class="card-body">
+              <h5>{{$recipe['display_title']}}</h5>
+              <p>いいね:{{$recipe['count']}}</p>
+              <p>{{$recipe['user']['name']}}</p>
+            </div>
+          </div>
+        @endforeach
+    </div>
+  </div>
+</div>
+<script>
+  $('.slider').slick({
+    speed: 800,
+    dots: true,
+    arrows: true,
+    centerMode:true,
+    centerPadding:"30%",
+  });
+</script>
 @endsection

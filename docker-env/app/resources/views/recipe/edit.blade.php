@@ -7,7 +7,7 @@
         @method('PUT')
         <div>
           <lavel for='main_image' class="form-label">メイン画像</lavel>
-          <input type='file' name='main_image' class="form-control">
+          <input type='file' name='main_image' class="form-control" id="fileInput">
         </div>
         <div>
           <lavel for='display_title' class="form-label">表示用タイトル</lavel>
@@ -61,5 +61,19 @@
         <input type='submit' class="btn btn-primary">
       </form>
     </div>
-    @endforeach
+  @endforeach
+
+  <script>
+    //ファイルサイズのバリデーション
+    $(document).ready(function(){
+    $('#fileInput').change(function(){
+      var fileSize=this.files[0].size;
+      var maxSizeInBytes=2097152;
+      if(fileSize>maxSizeInBytes){
+        alert('2MB以内の画像を選択してください');
+        $(this).val('');
+      }
+    });
+    });
+  </script>
 @endsection

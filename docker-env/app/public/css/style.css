@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+.slider .card{
+    width:70%;
+    margin:0 auto;
+}
+.slider .card img{
+    height:100%;
+}
+.slider .slick-slide{
+    height:auto!important;
+}
+.slider .slick-arrow{
+    z-index:2!important;
+}
+.slider .slick-next{
+    right:0!important;
+}
+.slider .slick-prev{
+    left:0!important;
+}

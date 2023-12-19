@@ -7,7 +7,7 @@
         @csrf
         <div>
           <lavel for='main_image' class="form-label">メイン画像</lavel>
-          <input type='file' name='main_image' class="form-control" required accept="image/*">
+          <input type='file' name='main_image' class="form-control" accept="image/*" required id="fileInput">
           <div class="invalid-feedback">
             サムネイルに使用するメイン画像登録は必須です
           </div>
@@ -80,6 +80,18 @@
       form.classList.add('was-validated')
     }, false)
   })
-})()
+  })()
+
+  //ファイルサイズのバリデーション
+  $(document).ready(function(){
+    $('#fileInput').change(function(){
+      var fileSize=this.files[0].size;
+      var maxSizeInBytes=2097152;
+      if(fileSize>maxSizeInBytes){
+        alert('2MB以内の画像を選択してください');
+        $(this).val('');
+      }
+    });
+  });
 </script>
 @endsection

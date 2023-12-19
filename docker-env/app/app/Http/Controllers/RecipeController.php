@@ -18,11 +18,11 @@ class RecipeController extends Controller
     //メイン画面、検索結果画面
     public function index(Request $request)
     {
-        $recipes=Recipe::with('user')->whereNull('recipes.deleted_at');
+        $recipes=Recipe::with('user','likes')->whereNull('recipes.deleted_at');
         //新着レシピ6件
-        $new_recipes=$recipes->latest()->take(6)->get()->toArray();
+        $new_recipes=Recipe::with('user','likes')->whereNull('recipes.deleted_at')->latest()->take(6)->get()->toArray();
         //いいねが多いレシピ6件
-        $good_recipes=
+        $good_recipes=Recipe::with('user')->leftJoin('likes', 'recipes.id', '=', 'likes.recipe_id')->select('recipes.id','recipes.user_id','recipes.display_title','recipes.main_image', DB::raw("count(likes.recipe_id) as count"))->groupBy('recipes.id')->orderBy('count','desc')->take(6)->get()->toArray();
         //検索があった場合
             $keyword=e($request->input('keyword'));
             $from=e($request->input('from'));
@@ -40,11 +40,12 @@ class RecipeController extends Controller
             if(!empty($to)){
                 $recipes->where('recipes.created_at','<=',$to);
             }
-            $search_recipes=$recipes->take(6)->get()->toArray();
+            $search_recipes=$recipes->paginate(10);
         return view('recipe.index',
         [
             'search_recipes'=>$search_recipes,
             'new_recipes'=>$new_recipes,
+            'good_recipes'=>$good_recipes,
             'keyword'=>$keyword,
             'from'=>$from,
             'to'=>$to,
