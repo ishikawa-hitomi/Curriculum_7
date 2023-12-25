@@ -7,6 +7,9 @@ use App\Models\Recipe;
 use App\Models\User;
 use App\Models\Ingredient;
 use App\Models\Step;
+use App\Models\Comment;
+use App\Models\Follow;
+use App\Models\Like;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -78,6 +81,7 @@ class AdminController extends Controller
         [
             'del_users'=>$del_users,
             'now'=>$now,
+            'pass'=>'00000000',
         ]);
     }
 
@@ -169,11 +173,25 @@ class AdminController extends Controller
         [
             'del_recipes'=>$del_recipes,
             'now'=>$now,
+            'pass'=>'00000000',
         ]);
     }
 
-    public function destroy(User $user)
+    public function user_delete(User $user)
     {
         //完全削除
+        $recipes=$user->recipes->toArray();
+            foreach($recipes as $recipe){
+                Recipe::find($recipe['id'])->delete();
+                Step::where('recipe_id',$recipe['id'])->delete();
+                Ingredient::where('recipe_id',$recipe['id'])->delete();
+                Comment::where('recipe_id',$recipe['id'])->delete();
+                Like::where('recipe_id',$recipe['id'])->delete();
+            }
+            Comment::where('user_id',$user['id'])->delete();
+            Like::where('user_id',$user['id'])->delete();
+            Follow::where('follower_id',$user['id'])->orwhere('following_id',$user['id'])->delete();
+            $user->delete();
+            return redirect(route('admin.user_index'));
     }
 }

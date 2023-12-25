@@ -155,13 +155,10 @@ return [
     */
 
     'attributes' => [
-        'display_title'=>'表示用タイトル',
-        'title'=>'料理名',
-        'memo'=>'メモ',
-        'main_image'=>'メイン画像',
-        'tag_id'=>'タグ',
-        'time'=>'調理時間目安',
-        'serve'=>'人数目安',
-    ],
+        'name'=>'名前',
+        'email'=>'メールアドレス',
+        'password'=>'パスワード',
+        'password_confirmation'=>'パスワード（確認）',
+        ],
 
 ];

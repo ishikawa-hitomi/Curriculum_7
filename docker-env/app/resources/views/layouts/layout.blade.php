@@ -39,10 +39,19 @@
 <body>
   <header>
     @if(Auth::check())
-      <span class="my-navbar-item my-name">{{Auth::user()->name}}</span>
-      /
-      <a href="#" id="logout" class="my-navbar-item">ログアウト</a>
-      <a href="{{route('recipe.index')}}">main</a>
+    <div class="d-flex justify-content-between">
+      <div>
+        <a href="#">F&Q</a>
+      </div>
+      <div>
+        <a href="{{route('recipe.index')}}">main</a>
+      </div>
+      <div>
+        <a href="{{route('user.show',['user'=>Auth::user()->id])}}">{{Auth::user()->name}}</a>
+        /
+        <a href="#" id="logout">ログアウト</a>
+      </div>
+    </div>
       <form action="{{route('logout')}}" method="post" style="display:none;" id="logout-form">
           @csrf
       </form>
@@ -60,50 +69,53 @@
   </header>
   <div class="main container-fluid">
     <div class="row">
-      <div class="left-content col-lg-4 bg-success"><!-- カラム（左） -->
+      <div class="left-content col-lg-4 my-2"><!-- カラム（左） -->
         @can('general')
-        <div class="container-fluid ">
-          <form action="{{route('recipe.index')}}" method="GET">
-            <div>
-              <label class="keyword">キーワード</label>
-              <input type="text" name="keyword" class="form-control" value="{{e(request()->input('keyword'))}}">
-              <small>スペースで複数の条件検索可能</small>
-            </div>
-            <div>
-              <label class="date">投稿日</label>
-              <div class="input-group">
-                <input type="date" name="from" class="form-control" value="{{e(request()->input('from'))}}">
-                〜
-                <input type="date" name="to" class="form-control" value="{{e(request()->input('to'))}}">
+          <div class="navbar-expand-lg bg-body-tertiary">
+            <div class="d-flex justify-content-between">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><image class="img-fluid" src="{{asset('メニューの無料アイコン5.png')}}"></span>
+              </button>
+              <div>
+                <a href="{{route('recipe.create')}}" type='button' class="btn btn-primary m-1">新規投稿</a>
+                <a href="{{route('user.show',['user'=>Auth::user()->id])}}"type='button' class="btn btn-primary m-1">マイページ</a>
               </div>
             </div>
-            <input type="submit" value="検索" class="btn btn-primary">
-          </form>
-        </div>
-        <div class="container-fluid">
-          <a href="{{route('recipe.create')}}">
-            <button type='button' class="btn btn-primary">新規投稿</button>
-          </a>
-          <a href="{{route('user.show',['user'=>Auth::user()->id])}}">
-            <button type='button' class="btn btn-primary">マイページ</button>
-          </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <div class="container-fluid">
+                <form action="{{route('recipe.index')}}" method="GET">
+                  <div>
+                    <label class="keyword" class="form-label">キーワード</label>
+                    <input type="text" name="keyword" class="form-control" value="{{e(request()->input('keyword'))}}">
+                    <small>スペースで複数の条件検索可能</small>
+                  </div>
+                  <div>
+                    <label class="date" class="form-label">投稿日</label>
+                    <div class="input-group">
+                      <input type="date" name="from" class="form-control" value="{{e(request()->input('from'))}}">
+                      〜
+                      <input type="date" name="to" class="form-control" value="{{e(request()->input('to'))}}">
+                    </div>
+                  </div>
+                  <input type="submit" value="検索" class="btn btn-primary">
+                </form>
+              </div>
+            </div>
         </div>
         @endcan
         @can('admin')
-        <h5>管理者用画面</h5>
-        <a href="{{route('admin.user_index')}}">
-          <button>ユーザー検索</button>
-        </a>
-        <a href="{{route('admin.recipe_index')}}">
-          <button>投稿検索</button>
-        </a>
+          <h5>管理者用画面</h5>
+          <a href="{{route('admin.user_index')}}">
+            <button>ユーザー検索</button>
+          </a>
+          <a href="{{route('admin.recipe_index')}}">
+            <button>投稿検索</button>
+          </a>
         @endcan
       </div>
 
       <div class="main-content col-lg-7"><!-- カラム（メイン） -->
-        <div class="container-fluid">
           @yield('content')
-        </div>
       </div>
 
       <div class="right-content col-lg-1 bg-info"><!-- カラム（右） -->

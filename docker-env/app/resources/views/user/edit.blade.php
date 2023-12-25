@@ -1,5 +1,10 @@
 @extends('layouts.layout')
 @section('content')
+  @if(session()->has('user_message'))
+    <div class="alert alert-danger" role="alert">
+      {{session()->pull('user_message')}}
+    </div>
+  @endif
   @foreach($users as $user)
     <div class="card-body">
       <form action="{{route('user.update',['user'=>Auth::user()->id])}}" method="post" class="was-validated">
@@ -21,7 +26,7 @@
         </div>
         <input type='submit' class="btn btn-primary">
       </form>
-      <a href="{{route('password_reset.email.form')}}">パスワード変更はこちらから</a>
+      <a href="{{route('user.pass_edit',['user'=>$user['id']])}}">パスワード変更はこちらから</a>
       <a href="{{route('user.delete_show',['user'=>Auth::user()->id])}}">アカウント削除はこちらから</a>
     </div>
   @endforeach

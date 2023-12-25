@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('user/{user}/delete', [UserController::class,'delete_show'])->name('user.delete_show');
     Route::get('user/{user}/profile', [UserController::class,'profile_edit'])->name('user.profile_edit');
     Route::post('user/{user}/profile', [UserController::class,'profile_update'])->name('user.profile_update');
+    Route::get('user/{user}/pass', [UserController::class,'pass_edit'])->name('user.pass_edit');
+    Route::post('user/{user}/pass', [UserController::class,'pass_update'])->name('user.pass_update');
 
     Route::resource('recipe',RecipeController::class);
     Route::get('recipe/{recipe}/delete', [RecipeController::class,'delete_show'])->name('recipe.delete_show');
@@ -66,5 +68,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/del_user_index',[AdminController::class,'del_user_index'])->name('del_user_index');
         Route::get('/recipe_index',[AdminController::class,'recipe_index'])->name('recipe_index');
         Route::get('/del_recipe_index',[AdminController::class,'del_recipe_index'])->name('del_recipe_index');
+        Route::post('/user_delete/{user}',[AdminController::class,'user_delete'])->name('user_delete');
     });
 });

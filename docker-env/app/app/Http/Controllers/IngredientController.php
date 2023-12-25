@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Ingredient;
+use Illuminate\Support\Facades\Auth;
 
 class IngredientController extends Controller
 {
@@ -21,11 +22,15 @@ class IngredientController extends Controller
 
     public function edit(Recipe $recipe)
     {
-        $ingredients=$recipe->ingredients->toArray();
-        return view('ingredient.edit',[
-            'ingredients'=>$ingredients,
-            'recipeId'=>$recipe['id'],
-        ]);
+        if($recipe['user_id']==Auth::user()->id){
+            $ingredients=$recipe->ingredients->toArray();
+            return view('ingredient.edit',[
+                'ingredients'=>$ingredients,
+                'recipeId'=>$recipe['id'],
+            ]);
+        }else{
+            return redirect(route('recipe.index'));
+        }
     }
 
     public function update(Request $request,Recipe $recipe)

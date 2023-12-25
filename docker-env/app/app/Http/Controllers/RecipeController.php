@@ -18,15 +18,20 @@ class RecipeController extends Controller
     //メイン画面、検索結果画面
     public function index(Request $request)
     {
-        $recipes=Recipe::with('user','likes')->whereNull('recipes.deleted_at');
+        $recipes=Recipe::with('user','likes','tag')->whereNull('recipes.deleted_at');
         //新着レシピ6件
         $new_recipes=Recipe::with('user','likes')->whereNull('recipes.deleted_at')->latest()->take(6)->get()->toArray();
         //いいねが多いレシピ6件
         $good_recipes=Recipe::with('user')->leftJoin('likes', 'recipes.id', '=', 'likes.recipe_id')->select('recipes.id','recipes.user_id','recipes.display_title','recipes.main_image', DB::raw("count(likes.recipe_id) as count"))->groupBy('recipes.id')->orderBy('count','desc')->take(6)->get()->toArray();
+        //コメントが多いレシピ6件
+        $comment_recipes=Recipe::with('user')->leftJoin('comments', 'recipes.id', '=', 'comments.recipe_id')->select('recipes.id','recipes.user_id','recipes.display_title','recipes.main_image', DB::raw("count(comments.recipe_id) as count"))->groupBy('recipes.id')->orderBy('count','desc')->take(6)->get()->toArray();
+        //タグ一覧
+        $tags=Tag::select('id','name')->get()->toArray();
         //検索があった場合
             $keyword=e($request->input('keyword'));
             $from=e($request->input('from'));
             $to=e($request->input('to'));
+            $tag=e($request->input('tag'));
             if(!empty($keyword)){
                 $spaceConversion = mb_convert_kana($keyword, 's');
                 $wordArray = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
@@ -40,15 +45,23 @@ class RecipeController extends Controller
             if(!empty($to)){
                 $recipes->where('recipes.created_at','<=',$to);
             }
+            if(!empty($tag)){
+                $recipes->where('recipes.tag_id','=',$tag);
+            }
+            $tag_name=array_search($tag,array_column($tags,'id'));
             $search_recipes=$recipes->paginate(10);
         return view('recipe.index',
         [
             'search_recipes'=>$search_recipes,
             'new_recipes'=>$new_recipes,
             'good_recipes'=>$good_recipes,
+            'comment_recipes'=>$comment_recipes,
             'keyword'=>$keyword,
             'from'=>$from,
             'to'=>$to,
+            'tag'=>$tag,
+            'tag_name'=>$tag_name,
+            'tags'=>$tags,
         ]);
     }
 
@@ -92,6 +105,7 @@ class RecipeController extends Controller
     //レシピ編集画面
     public function edit(Recipe $recipe)
     {
+        if($recipe['user_id']==Auth::user()->id){
         $result=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
         $tag=new Tag;
         $tags=$tag->all()->toArray();
@@ -99,6 +113,9 @@ class RecipeController extends Controller
             'recipes'=>$result,
             'tags'=>$tags,
         ]);
+        }else{
+            return redirect(route('recipe.index'));
+        }
     }
     //レシピ編集保存
     public function update(Request $request, Recipe $recipe)
@@ -120,10 +137,14 @@ class RecipeController extends Controller
     //投稿削除確認画面
     public function delete_show(Recipe $recipe)
     {
+        if($recipe['user_id']==Auth::user()->id){
         $recipes=Recipe::where('id','=',$recipe['id'])->with('tag')->get()->toArray();
         return view('recipe.delete_show',[
             'recipes'=>$recipes,
         ]);
+        }else{
+            return redirect(route('recipe.index'));
+        }
     }
     //投稿倫理削除
     public function destroy(Recipe $recipe)

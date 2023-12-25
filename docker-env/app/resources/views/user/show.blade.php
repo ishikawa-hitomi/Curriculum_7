@@ -1,18 +1,25 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
-        <h4 class="card-title">{{$users[0]['name']}}</h4>
+  <div class="card border-light">
       <div class="card-body">
-        @if($users[0]['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
-          <img class="col-sm-1 rounded-circle" src="{{asset('download20231202123050.png') }}">
-        @else
-          <img class="col-sm-1 rounded-circle" src="{{asset('storage/' . $users[0]['icon']) }}">
-        @endif
+        <div class="row aline-center">
+          <div class="col-2">
+            <div class="ratio ratio-1x1">
+              @if($users[0]['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
+                <img class="rounded-circle" style="object-fit: cover;" src="{{asset('download20231202123050.png') }}">
+              @else
+                <img class="rounded-circle" style="object-fit: cover;" src="{{asset('storage/' . $users[0]['icon']) }}">
+              @endif
+            </div>
+          </div>
+          <div class="col-10">
+            <p>{{$users[0]['name']}}</p>
+          </div>
+        </div>
         <p>{{$users[0]['profile']}}</p>
         @can('admin')<!-- ユーザー削除　ここはあとで完全削除に差し替える -->
-          <form action="{{route('user.destroy',['user'=>$users[0]['id']])}}" method="post">
+          <form action="{{route('admin.user_delete',['user'=>$users[0]['id']])}}" method="post">
             @csrf
-            @method('DELETE')
             <input type="submit" value="ユーザーを削除する">
           </form>
         @endcan
@@ -48,11 +55,11 @@
     </div>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <div class="row row-cols-1 row-cols-md-2">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
           @foreach($users[0]['recipes'] as $recipe)<!-- 自分の投稿を表示 -->
             <div class="col">
-              <div class="card m-4">
-                <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}"><img class="card-img-top" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
+              <div class="card m-3">
+                <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}" class="ratio ratio-4x3"><img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
                 <div class="card-body">
                   <a href="{{route('recipe.show',['recipe'=>$recipe['id']])}}" class="card-link">{{$recipe['display_title']}}</a>
                 </div>
@@ -62,11 +69,11 @@
         </div>
       </div>
       <div class="tab-pane fade" id="nav-like" role="tabpanel" aria-labelledby="nav-like-tab">
-        <div class="row row-cols-1 row-cols-md-2">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
           @foreach($likes as $like)<!-- いいねした投稿を表示 -->
             <div class="col">
               <div class="card m-4">
-                <a href="{{route('recipe.show',['recipe'=>$like['recipe_id']])}}"><img class="card-img-top" src="{{asset('storage/' . $like['main_image']) }}"></a>
+                <a href="{{route('recipe.show',['recipe'=>$like['recipe_id']])}}" class="ratio ratio-4x3"><img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $like['main_image']) }}"></a>
                 <div class="card-body">
                   <a href="{{route('recipe.show',['recipe'=>$like['recipe_id']])}}" class="card-link">{{$like['display_title']}}</a>
                   <a href="{{route('user.show',['user'=>$like['user_id']])}}" class="card-link"></a>

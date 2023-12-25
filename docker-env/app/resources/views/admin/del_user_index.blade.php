@@ -43,8 +43,8 @@
                     <td>{{$user['name']}}</td>
                     <td>{{substr($user['deleted_at'],0,10)}}</td>
                     <td>{{$now->diffInDays($user['deleted_at'])}}日</td>
-                    <td><form action="{{route('admin.del_user_index')}}" methd="post">@csrf<input type="hidden" name="restore" value="{{$user['id']}}"><input type="submit" class="btn btn-primary" value="復元" onClick="delete_prompt();return false;"></form></td>
-                    <td><form action="{{route('admin.del_user_index')}}" methd="post">@csrf<input type="hidden" name="forceDelete" value="{{$user['id']}}"><input type="submit" class="btn btn-danger" value="完全削除" onClick="delete_alert(event);return false;"></form></td>
+                    <td><form action="{{route('admin.del_user_index')}}" methd="post">@csrf<input type="hidden" name="restore" value="{{$user['id']}}"><input type="submit" class="btn btn-primary" value="復元" onClick="restore_prompt();return false;"></form></td>
+                    <td><form action="{{route('admin.del_user_index')}}" methd="post">@csrf<input type="hidden" name="forceDelete" value="{{$user['id']}}"><input type="submit" class="btn btn-danger" value="完全削除" onClick="delete_prompt();return false;"></form></td>
                   </tr>
                 @endforeach
               </tbody>
@@ -54,16 +54,18 @@
     </div>
   </div>
   <script>
-    function delete_alert(e){
-      if(!window.confirm('データが完全に削除されます。本当に削除しますか？')){
+    function restore_prompt(){
+      var Input=window.prompt("本当に復元しますか？復元する場合はパスワードを入力してください。","");
+      if(Input=="{{$pass}}"){
+        document.deleteform.submit();
+      }else{
         window.alert('キャンセルされました');
         return false;
       }
-      document.deleteform.submit();
     };
     function delete_prompt(){
       var Input=window.prompt("本当に削除しますか？削除する場合はパスワードを入力してください。","");
-      if(Input=="delete"){
+      if(Input=="{{$pass}}"){
         document.deleteform.submit();
       }else{
         window.alert('キャンセルされました');

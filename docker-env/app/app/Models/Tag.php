@@ -12,4 +12,8 @@ class Tag extends Model
     protected $fillable=['name'];
 
     public $timestamps=false;
+
+    public function recipes(){
+        return $this->hasMany(Recipe::class);
+    }
 }

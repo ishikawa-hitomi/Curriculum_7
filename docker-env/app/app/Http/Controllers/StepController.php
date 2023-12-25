@@ -49,11 +49,15 @@ class StepController extends Controller
 
     public function edit(Recipe $recipe)
     {
-        $steps=$recipe->steps->toArray();
-        return view('step.edit',[
-            'steps'=>$steps,
-            'recipeId'=>$recipe['id'],
-        ]);
+        if($recipe['user_id']==Auth::user()->id){
+            $steps=$recipe->steps->toArray();
+            return view('step.edit',[
+                'steps'=>$steps,
+                'recipeId'=>$recipe['id'],
+            ]);
+        }else{
+            return redirect(route('recipe.index'));
+        }
     }
 
     public function update(Request $request,Recipe $recipe)
