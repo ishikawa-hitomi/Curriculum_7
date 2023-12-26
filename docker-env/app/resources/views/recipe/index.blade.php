@@ -48,12 +48,18 @@
         <div class="slider">
           @foreach($new_recipes as $recipe)
             <div class="card">
-              <p class="text-center">{{substr($recipe['created_at'],0,10)}}</p>
+              <p class="text-center my-auto"><strong>{{substr($recipe['created_at'],0,10)}}</strong></p>
               <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}" class="ratio ratio-16x9"><img style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
               <div class="card-body">
-                <h5>{{$recipe['display_title']}}</h5>
-                <p>いいね:{{count($recipe['likes'])}}
-                <br>{{$recipe['user']['name']}}</p>
+                <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}" class="link-dark text-decoration-none">
+                  <div>
+                    <h5>{{$recipe['display_title']}}</h5>
+                    {{count($recipe['likes'])}}&nbsp;<small>いいね</small>
+                  </div>
+                </a>
+                <a href="{{(route('user.show',['user'=>$recipe['user_id']]))}}" class="link-dark text-decoration-none">
+                <div>{{$recipe['user']['name']}}</div>
+                </a>
               </div>
             </div>
           @endforeach
@@ -66,12 +72,18 @@
         <div class="slider">
           @foreach($good_recipes as $recipe)
             <div class="card">
-              <p class="text-center">{{$loop->index+1}}位</p>
+              <p class="text-center my-auto"><strong>{{$loop->index+1}}位</strong></p>
               <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}" class="ratio ratio-16x9"><img style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
               <div class="card-body">
-                <h5>{{$recipe['display_title']}}</h5>
-                <p>いいね:{{$recipe['count']}}
-                <br>{{$recipe['user']['name']}}</p>
+                <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}" class="link-dark text-decoration-none">
+                  <div>
+                    <h5>{{$recipe['display_title']}}</h5>
+                    {{$recipe['count']}}&nbsp;<small>いいね</small>
+                  </div>
+                </a>
+                <a href="{{(route('user.show',['user'=>$recipe['user_id']]))}}" class="link-dark text-decoration-none">
+                <div>{{$recipe['user']['name']}}</div>
+                </a>
               </div>
             </div>
           @endforeach
@@ -84,12 +96,18 @@
         <div class="slider">
           @foreach($comment_recipes as $recipe)
             <div class="card">
-              <p class="text-center">{{$loop->index+1}}位</p>
+              <p class="text-center"><strong>{{$loop->index+1}}位</strong></p>
               <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}" class="ratio ratio-16x9"><img style="object-fit: cover;" src="{{asset('storage/' . $recipe['main_image']) }}"></a>
               <div class="card-body">
-                <h5>{{$recipe['display_title']}}</h5>
-                <p>コメント:{{$recipe['count']}}
-                <br>{{$recipe['user']['name']}}</p>
+                <a href="{{(route('recipe.show',['recipe'=>$recipe['id']]))}}" class="link-dark text-decoration-none">
+                  <div>
+                    <h5>{{$recipe['display_title']}}</h5>
+                    {{$recipe['count']}}&nbsp;<small>コメント</small>
+                  </div>
+                </a>
+                <a href="{{(route('user.show',['user'=>$recipe['user_id']]))}}" class="link-dark text-decoration-none">
+                  <div>{{$recipe['user']['name']}}</div>
+                </a>
               </div>
             </div>
           @endforeach

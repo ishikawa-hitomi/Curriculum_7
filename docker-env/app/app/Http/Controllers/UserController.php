@@ -45,7 +45,7 @@ class UserController extends Controller
             $users=User::where('id','=',$user['id'])->get()->toArray();
             return view('user.edit',[
                 'users'=>$users,
-        ]);
+            ]);
         }else{
             return redirect(route('recipe.index'));
         }

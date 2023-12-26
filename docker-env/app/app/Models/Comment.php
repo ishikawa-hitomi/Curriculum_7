@@ -14,6 +14,10 @@ class Comment extends Model
     protected $fillable=['user_id','recipe_id','comment'];
 
     public function recipe(){
-        return $this->hasMany('App\Models\Recipe','recipe_id','id');
+        return $this->hasMany('App\Models\Recipe','id','recipe_id');
+    }
+
+    public function user(){
+        return $this->hasMany('App\Models\User','id','user_id');
     }
 }

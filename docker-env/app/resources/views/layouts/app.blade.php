@@ -23,40 +23,45 @@
 </head>
 <body>
     <div id="app">
-        <nav class="nav">
-            <div class="container">
-                <ul class="nav">
-                    @guest
-                        @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">ログイン</a>
-                            </li>
-                        @endif
-                        @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">新規登録</a>
-                            </li>
-                        @endif
-                    @else
+        @if(Auth::check())
+            <nav class="nav">
+                <div class="container">
+                    <ul class="nav justify-content-between">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('user.show',['user'=>Auth::user()->id])}}" role="button">
-                                {{ Auth::user()->name }}
-                            </a>
+                            <a class="nav-link" href="{{route('faq_view')}}">F&Q</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                            document.getElementById('logout-form').submit();">
-                                ログアウト
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
+                            <a class="nav-link" href="{{route('recipe.index')}}">main</a>
                         </li>
-                    @endguest
-                </ul>
-            </div>
-        </nav>
+                        <li class="nav-item d-flex">
+                            <a class="nav-link disabled">{{Auth::user()->name}}</a><a class="nav-link disabled">/</a><a class="nav-link" href="#" id="logout">ログアウト</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <form action="{{route('logout')}}" method="post" style="display:none;" id="logout-form">
+                @csrf
+            </form>
+            <script>
+                document.getElementById('logout').addEventListener('click',function(event){
+                    event.preventDefault();
+                    document.getElementById('logout-form').submit();
+                });
+            </script>
+        @else
+            <nav class="nav">
+                <div class="container">
+                    <ul class="nav justify-content-between">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('faq_view')}}">F&Q</a>
+                        </li>
+                        <li class="nav-item d-flex">
+                        <a class="nav-link" href="{{ route('login') }}">ログイン</a><a class="nav-link disabled">/</a><a class="nav-link" href="{{ route('register') }}">新規登録</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        @endif
         <main class="py-4">
             @yield('content')
         </main>

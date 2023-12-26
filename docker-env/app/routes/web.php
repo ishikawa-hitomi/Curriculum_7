@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\StepController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Route::prefix('password_reset')->name('password_reset.')->group(function(){
     Route::get('/edited',[PasswordController::class,'edited'])->name('edited');
 });
 
+Route::get('/faq_view',[DisplayController::class,'faq_view'])->name('faq_view');
+
 Auth::routes();
 Route::middleware(['auth'])->group(function(){
 
@@ -43,6 +46,11 @@ Route::middleware(['auth'])->group(function(){
 
     Route::resource('recipe',RecipeController::class);
     Route::get('recipe/{recipe}/delete', [RecipeController::class,'delete_show'])->name('recipe.delete_show');
+
+    Route::resource('comment',CommentController::class)->only(['show'])->parameters(['comment' => 'recipe']);
+    Route::resource('comment',CommentController::class)->only(['edit','update','destroy']);
+    Route::get('/comment_create/{recipe}',[CommentController::class,'comment_create_form'])->name('comment_create');
+    Route::post('/comment_create/{recipe}',[CommentController::class,'comment_create']);
 
     Route::resource('ingredient',IngredientController::class)->only(['create','store','edit','update'])->parameters(['ingredient' => 'recipe']);
 
@@ -59,9 +67,6 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/tag_create',[RegistrantionController::class,'tag_create_form'])->name('tag_create');
     Route::post('/tag_create',[RegistrantionController::class,'tag_create']);
-
-    Route::get('/comment_create/{recipe}',[RegistrantionController::class,'comment_create_form'])->name('comment_create');
-    Route::post('/comment_create/{recipe}',[RegistrantionController::class,'comment_create']);
 
     Route::middleware(['can:admin'])->prefix('admin')->name('admin.')->group(function(){
         Route::get('/user_index',[AdminController::class,'user_index'])->name('user_index');

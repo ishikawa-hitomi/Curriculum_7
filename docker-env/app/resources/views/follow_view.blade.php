@@ -17,16 +17,18 @@
             {{$user['name']}}<br>{{$user['profile']}}
           </a>
         </div>
-        <div class="col-3 my-auto">
+        <div class="col-3 my-auto d-flex justify-content-end">
           @can('general')
             @if($user['following_id']!=Auth::user()->id)
               @if(in_array($user['following_id'],$myfollow))<!-- フォロー機能 -->
-                <a href="{{ route('remove_follow',['user'=>$user['following_id']])}}" class="btn btn-danger btn-sm">
-                  削除
+                <a href="{{ route('remove_follow',['user'=>$user['id']])}}" class="btn btn-outline-danger btn-sm">
+                  フォロー解除
+                  <span class="badge"></span>
                 </a>
               @else
-                <a href="{{ route('add_follow',['user'=>$user['following_id']])}}" class="btn btn-primary btn-sm">
-                  フォロー
+                <a href="{{ route('add_follow',['user'=>$user['id']])}}" class="btn btn-outline-primary btn-sm">
+                  &emsp;フォロー&emsp;
+                  <span class="badge"></span>
                 </a>
               @endif
             @endif

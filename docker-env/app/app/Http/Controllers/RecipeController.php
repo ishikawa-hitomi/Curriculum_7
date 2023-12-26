@@ -92,13 +92,15 @@ class RecipeController extends Controller
     //投稿詳細画面
     public function show(Recipe $recipe)
     {
-        $recipes=Recipe::where('id',$recipe['id'])->with('tag','user','ingredients','steps','comments')->get()->toArray();
+        $recipes=Recipe::where('id',$recipe['id'])->with('tag','user','ingredients','steps','likes')->get()->toArray();
         $mylikes=Auth::user()->likes->toArray();
         $mylikes=array_column($mylikes,'recipe_id');
+        $comments=Comment::where('recipe_id',$recipe['id'])->with('user')->take(4)->get()->toArray();
         return view('recipe.show',
         [
             'recipes'=>$recipes,
             'mylikes'=>$mylikes,
+            'comments'=>$comments,
         ]);
     }
 

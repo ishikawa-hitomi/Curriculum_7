@@ -39,19 +39,21 @@
 <body>
   <header>
     @if(Auth::check())
-    <div class="d-flex justify-content-between">
-      <div>
-        <a href="#">F&Q</a>
-      </div>
-      <div>
-        <a href="{{route('recipe.index')}}">main</a>
-      </div>
-      <div>
-        <a href="{{route('user.show',['user'=>Auth::user()->id])}}">{{Auth::user()->name}}</a>
-        /
-        <a href="#" id="logout">ログアウト</a>
-      </div>
-    </div>
+    <nav class="nav">
+        <div class="container">
+          <ul class="nav justify-content-between">
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('faq_view')}}">F&Q</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('recipe.index')}}">main</a>
+            </li>
+            <li class="nav-item d-flex">
+              <a class="nav-link disabled">{{Auth::user()->name}}</a><a class="nav-link disabled">/</a><a class="nav-link" href="#" id="logout">ログアウト</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <form action="{{route('logout')}}" method="post" style="display:none;" id="logout-form">
           @csrf
       </form>
@@ -61,10 +63,6 @@
               document.getElementById('logout-form').submit();
           });
       </script>
-    @else
-          <a href="{{route('login')}}" class="my-navbar-item">ログイン</a>
-          /
-          <a href="{{route('register')}}" class="my-navbar-item">会員登録</a>
     @endif
   </header>
   <div class="main container-fluid">
@@ -114,11 +112,11 @@
         @endcan
       </div>
 
-      <div class="main-content col-lg-7"><!-- カラム（メイン） -->
+      <div class="main-content col-lg-6"><!-- カラム（メイン） -->
           @yield('content')
       </div>
 
-      <div class="right-content col-lg-1 bg-info"><!-- カラム（右） -->
+      <div class="right-content col-lg-2 bg-info"><!-- カラム（右） -->
       </div>
     </div>
   </div>

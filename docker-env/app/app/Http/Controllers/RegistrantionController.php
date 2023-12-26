@@ -32,21 +32,4 @@ class RegistrantionController extends Controller
         $tag->save();
         return back();
     }
-
-    //ここからコメント作成
-    public function comment_create_form(Recipe $recipe){
-        return view('comment_create_form',[
-            'recipeId'=>$recipe['id'],
-        ]);
-    }
-
-    public function comment_create(Recipe $recipe,Request $request){
-        $comment=new Comment;
-        $columns=['comment','user_id','recipe_id'];
-        foreach($columns as $column){
-            $comment->$column=e($request->$column);
-        }
-        $comment->save();
-        return redirect(route('recipe.show',['recipe'=>$recipe['id']]));
-    }
 }

@@ -12,33 +12,36 @@
                     <a class="btn btn-outline-primary" role="button" href="{{route('recipe.delete_show',['recipe'=>$recipes[0]['id']])}}">削除</a>
                 @else
                 <div class="row m-2">
-                    <div class="col-2" style="max-width:100px;">
-                        <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}"  class="ratio ratio-1x1">
-                            @if($recipes[0]['user']['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
-                                <img class="rounded-circle" src="{{asset('download20231202123050.png') }}">
-                            @else
-                                <img class="rounded-circle" src="{{asset('storage/' . $recipes[0]['user']['icon']) }}">
-                            @endif
+                <div class="col-4">
+                    <div class="d-flex">
+                        <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}" style="max-width:80px;">
+                            <div  class="ratio ratio-1x1">
+                                @if($recipes[0]['user']['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
+                                    <img class="rounded-circle" src="{{asset('download20231202123050.png') }}">
+                                @else
+                                    <img class="rounded-circle" src="{{asset('storage/' . $recipes[0]['user']['icon']) }}">
+                                @endif
+                            </div>
+                            <p class="my-auto">{{$recipes[0]['user']['name']}}</p>
                         </a>
                     </div>
-                    <div class="col-9 my-auto">
-                    <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}">{{$recipes[0]['user']['name']}}</a>
+                    </div>
+                    <div class="col-8 my-auto d-flex justify-content-end">
                     @can('admin')
                         <a class="btn btn-danger" role="button" href="#">完全に削除</a>
                     @endcan
                     @can('general')
                         @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
-                        <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-success btn-sm">
-                            いいねを消す
-                            <span class="badge"></span>
+                        <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-danger btn-sm">
+                            お気に入り解除
+                            <span class="badge" style="max-width:40px;"><img src="{{asset('ハートのアイコン素材 1.png') }}" style="object-fit: cover;" class="img-fluid"></span>{{count($recipes[0]['likes'])}}
                         </a>
                         @else
-                        <a href="{{ route('add_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-secondary btn-sm">
-                            いいねをつける
-                            <span class="badge"></span>
+                        <a href="{{ route('add_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-primary btn-sm">
+                            お気に入り登録
+                            <span class="badge" style="max-width:40px;"><img src="{{asset('ハートのアイコン素材 1 (1).png') }}" style="object-fit: cover;" class="img-fluid"></span>{{count($recipes[0]['likes'])}}
                         </a>
                         @endif
-                        <a href="{{route('comment_create',['recipe'=>$recipes[0]['id']])}}" class="btn btn-primary btn-sm">コメントを投稿する</a>
                     @endcan
                     </div>
                     </div>
@@ -63,59 +66,102 @@
                         </div>
                     </div>
                 </div>
-                <p>{{$recipes[0]['memo']}}</p>
+                <div class="card">
+                    <div class="card-title">ひとことメモ</div>
+                    <div class="card-body">
+                        <p>{{$recipes[0]['memo']}}</p>
+                    </div>
+                </div>
             </div>
         <div class="card-body">
-            <table class="table">
-                <thead class="table-primary">
+            <table class="table table-sm">
+                <thead>
                     <tr>
-                        <th>材料名</th>
-                        <th>分量</th>
+                        <th>材料({{$recipes[0]['serve']}}人分)</th>
+                        <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     @foreach($recipes[0]['ingredients'] as $ingredient)
                         <tr>
-                            <th>{{$ingredient['name']}}</th>
-                            <th>{{$ingredient['quantity']}}</th>
+                            <td>{{$ingredient['name']}}</td>
+                            <td>{{$ingredient['quantity']}}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
         <div class="card-body">
-        @foreach($recipes[0]['steps'] as $step)
-            <div class="card">
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-1">
-                        <h6 class="card-title text-center">手順{{$loop->index+1}}</h6>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="ratio ratio-16x9">
-                            <img src="{{asset('storage/' . $step['sub_image']) }}" class="img-fluid rounded-start" style="object-fit: cover;">
+            @foreach($recipes[0]['steps'] as $step)
+                <div class="card">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-md-1">
+                            <h6 class="card-title text-center">手順{{$loop->index+1}}</h6>
                         </div>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="card-body">
-                            <p class="card-text">{{$step['procedure']}}</p>
+                        <div class="col-4">
+                            <div class="ratio ratio-16x9">
+                                <img src="{{asset('storage/' . $step['sub_image']) }}" class="img-fluid rounded-start" style="object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="card-body">
+                                <p class="card-text">{{$step['procedure']}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
         </div>
-        @if(!empty($recipes[0]['comments']))
-            <div class="card m-5">
-                <h5 class="card-title text-center">コメント一覧</h5>
-                @foreach($recipes[0]['comments'] as $comment)
+        <div class="card m-5">
+            <h5 class="card-title text-center">コメント一覧</h5>
+            @if(!empty($comments))
+                @foreach($comments as $comment)
                     <div class="card-body">
-                        <div class="col-md-10">
-                            <p class="card-text">{{$comment['comment']}}</p>
+                        <div class="row">
+                            @if($loop->index!=3)
+                                <div class="col-2" style="max-width:80px;">
+                                    <div class="ratio ratio-1x1">
+                                        @if(is_null($comment['user'][0]['icon']))
+                                            <img class="rounded-circle" style="object-fit: cover;" src="{{asset('download20231202123050.png') }}">
+                                        @else
+                                            <img class="rounded-circle" style="object-fit: cover;" src="{{asset('storage/' . $comment['user'][0]['icon']) }}">
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-10 border border-dark rounded-3 p-2">
+                                    <p>{{$comment['comment']}}</p>
+                                    <small>from&nbsp;{{$comment['user'][0]['name']}}</small>
+                                    <div class="d-flex justify-content-end">
+                                        @if($comment['user'][0]['id']==Auth::user()->id)
+                                            <a href="{{route('comment.edit',['comment'=>$comment['id']])}}" class="btn btn-outline-primary btn-sm">編集</a>
+                                            <form action="{{route('comment.destroy',['comment'=>$comment['id']])}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="submit" value="削除" class="btn btn-outline-danger btn-sm" onClick="delete_alert(event);return false;">
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                                <p class="text-end">{{substr($comment['created_at'],0,10)}}</p>
+                            @elseif($loop->index==3)
+                                <a href="{{route('comment.show',['recipe'=>$recipes[0]['id']])}}">もっと見る</a>
+                            @endif
                         </div>
                     </div>
                 @endforeach
-            </div>
-        @endif
+            @else
+                <p class="text-center">コメントはありません</p>
+            @endif
+            <a href="{{route('comment_create',['recipe'=>$recipes[0]['id']])}}" class="btn btn-primary btn-sm col-4 mx-auto">コメントを投稿する</a>
+        </div>
     </div>
-
+    <script>
+        function delete_alert(e){
+            if(!window.confirm('本当に削除しますか？')){
+                window.alert('キャンセルされました');
+                return false;
+            }
+            document.deleteform.submit();
+        };
+    </script>
 @endsection
