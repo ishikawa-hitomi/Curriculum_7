@@ -7,7 +7,7 @@
         @method('PUT')
         <div>
           <lavel for='main_image' class="form-label">メイン画像</lavel>
-          <input type='file' name='main_image' class="form-control" id="fileInput">
+          <input type='file' name='main_image' class="form-control" accept="image/*" id="fileInput">
         </div>
         <div>
           <lavel for='display_title' class="form-label">表示用タイトル</lavel>
@@ -39,16 +39,13 @@
         </div>
         <div>
           <lavel for='tag_id' lass="form-label">タグ</lavel>
-          <select name='tag_id' class="form-select" required>
-          <option value="" disabled selected>タグを選択してください</option>
+          <div class="row row-cols-4">
             @foreach($tags as $tag)
-              @if($tag['id']==$recipe['tag_id'])
-              <option value="{{$tag['id']}}" selected>{{$tag['name']}}</option>
-              @else
-              <option value="{{$tag['id']}}">{{$tag['name']}}</option>
-              @endif
+              <div class="col">
+                <input type="checkbox" name="tag_id[]" value="{{$tag['id']}}" @if($recipe['tag_id_1']==$tag['id']||$recipe['tag_id_2']==$tag['id']||$recipe['tag_id_3']==$tag['id']||$recipe['tag_id_4']==$tag['id']||$recipe['tag_id_5']==$tag['id']) checked @endif>{{$tag['name']}}
+              </div>
             @endforeach
-          </select>
+          </div>
           <div class="invalid-feedback">
             タグ選択は必須です
           </div>
@@ -56,7 +53,7 @@
         </div>
         <div>
           <lavel for='memo' lass="form-label">メモ</lavel>
-          <textarea name='memo' class="form-control">{{$recipe['memo']}}</textarea>
+          <textarea name='memo' class="form-control" maxlength=255>{{$recipe['memo']}}</textarea>
         </div>
         <input type='submit' class="btn btn-primary">
       </form>
@@ -74,6 +71,37 @@
         $(this).val('');
       }
     });
+    });
+
+    const maxChecks = 5;
+    const minChecks = 0;
+    const checkboxes = document.querySelectorAll('input[name="tag_id[]"]');
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        const checkedCheckboxes = document.querySelectorAll('input[name="tag_id[]"]:checked');
+        if (checkedCheckboxes.length >= maxChecks) {
+          checkboxes.forEach((cb) => {
+            if (!cb.checked) {
+              cb.disabled = true;
+            }
+          });
+        } else {
+          checkboxes.forEach((cb) => {
+            cb.disabled = false;
+          });
+        }
+        if (checkedCheckboxes.length > minChecks) {
+          checkboxes.forEach((cb) => {
+            cb.required = false;
+          });
+        }else{
+          checkboxes.forEach((cb) => {
+            if (!cb.checked) {
+              cb.required = true;
+            }
+          });
+        }
+      });
     });
   </script>
 @endsection

@@ -35,7 +35,7 @@
                   </div>
                 </div>
                 <div class="card">
-                  <textarea name='procedure[]' class="form-control" required>{{$step['procedure']}}</textarea>
+                  <textarea name='procedure[]' class="form-control" required  maxlength=255>{{$step['procedure']}}</textarea>
                   <div class="invalid-feedback">
                     手順の入力は必須です
                   </div>

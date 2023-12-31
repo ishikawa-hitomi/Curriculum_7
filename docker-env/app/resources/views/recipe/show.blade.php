@@ -3,7 +3,11 @@
     <div class="card">
             <div class="card-body">
                 <h4 class="card-title">{{$recipes[0]['display_title']}}</h4>
-                <span class="badge rounded-pill bg-primary">{{$recipes[0]['tag']['name']}}</span>
+                    @foreach($tags as $tag)
+                        @if($recipes[0]['tag_id_1']==$tag['id']||$recipes[0]['tag_id_2']==$tag['id']||$recipes[0]['tag_id_3']==$tag['id']||$recipes[0]['tag_id_4']==$tag['id']||$recipes[0]['tag_id_5']==$tag['id'])
+                        <span class="badge rounded-pill bg-primary">{{$tag['name']}}</span>
+                        @endif
+                    @endforeach
                 <div class="ratio ratio-21x9">
                     <img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $recipes[0]['main_image']) }}">
                 </div>
@@ -27,9 +31,6 @@
                     </div>
                     </div>
                     <div class="col-8 my-auto d-flex justify-content-end">
-                    @can('admin')
-                        <a class="btn btn-danger" role="button" href="#">完全に削除</a>
-                    @endcan
                     @can('general')
                         @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
                         <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-danger btn-sm">
@@ -112,47 +113,55 @@
                 </div>
             @endforeach
         </div>
-        <div class="card m-5">
-            <h5 class="card-title text-center">コメント一覧</h5>
-            @if(!empty($comments))
-                @foreach($comments as $comment)
-                    <div class="card-body">
-                        <div class="row">
-                            @if($loop->index!=3)
-                                <div class="col-2" style="max-width:80px;">
-                                    <div class="ratio ratio-1x1">
-                                        @if(is_null($comment['user'][0]['icon']))
-                                            <img class="rounded-circle" style="object-fit: cover;" src="{{asset('download20231202123050.png') }}">
-                                        @else
-                                            <img class="rounded-circle" style="object-fit: cover;" src="{{asset('storage/' . $comment['user'][0]['icon']) }}">
-                                        @endif
+        <div class="card-body">
+            <div class="card">
+                <h5 class="card-title text-center">コメント一覧</h5>
+                @if(!empty($comments))
+                    @foreach($comments as $comment)
+                        <div class="card-body">
+                            <div class="row">
+                                @if($loop->index!=3)
+                                    <div class="col-2" style="max-width:80px;">
+                                        <div class="ratio ratio-1x1">
+                                            @if(is_null($comment['user'][0]['icon']))
+                                                <img class="rounded-circle" style="object-fit: cover;" src="{{asset('download20231202123050.png') }}">
+                                            @else
+                                                <img class="rounded-circle" style="object-fit: cover;" src="{{asset('storage/' . $comment['user'][0]['icon']) }}">
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-10 border border-dark rounded-3 p-2">
-                                    <p>{{$comment['comment']}}</p>
-                                    <small>from&nbsp;{{$comment['user'][0]['name']}}</small>
-                                    <div class="d-flex justify-content-end">
-                                        @if($comment['user'][0]['id']==Auth::user()->id)
-                                            <a href="{{route('comment.edit',['comment'=>$comment['id']])}}" class="btn btn-outline-primary btn-sm">編集</a>
-                                            <form action="{{route('comment.destroy',['comment'=>$comment['id']])}}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="submit" value="削除" class="btn btn-outline-danger btn-sm" onClick="delete_alert(event);return false;">
-                                            </form>
-                                        @endif
+                                    @if($comment['user'][0]['id']==$recipes[0]['user_id'])
+                                    <div class="col-10 border border-dark rounded-3 p-2" style="background-color: #33FF00;">
+                                    @else
+                                    <div class="col-10 border border-dark rounded-3 p-2">
+                                    @endif
+                                        <p>{{$comment['comment']}}</p>
+                                        <small>from&nbsp;{{$comment['user'][0]['name']}}</small>
+                                        <div class="d-flex justify-content-end">
+                                            @if($comment['user'][0]['id']==Auth::user()->id)
+                                                <a href="{{route('comment.edit',['comment'=>$comment['id']])}}" class="btn btn-outline-primary btn-sm">編集</a>
+                                                <form action="{{route('comment.destroy',['comment'=>$comment['id']])}}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="submit" value="削除" class="btn btn-outline-danger btn-sm" onClick="delete_alert(event);return false;">
+                                                </form>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                                <p class="text-end">{{substr($comment['created_at'],0,10)}}</p>
-                            @elseif($loop->index==3)
-                                <a href="{{route('comment.show',['recipe'=>$recipes[0]['id']])}}">もっと見る</a>
-                            @endif
+                                    <p class="text-end">{{substr($comment['created_at'],0,10)}}</p>
+                                @elseif($loop->index==3)
+                                    <a href="{{route('comment.show',['recipe'=>$recipes[0]['id']])}}">もっと見る</a>
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            @else
-                <p class="text-center">コメントはありません</p>
-            @endif
-            <a href="{{route('comment_create',['recipe'=>$recipes[0]['id']])}}" class="btn btn-primary btn-sm col-4 mx-auto">コメントを投稿する</a>
+                    @endforeach
+                @else
+                    <p class="text-center">コメントはありません</p>
+                @endif
+                @can('general')
+                    <a href="{{route('comment_create',['recipe'=>$recipes[0]['id']])}}" class="btn btn-primary btn-sm col-4 mx-auto">コメントを投稿する</a>
+                @endcan
+            </div>
         </div>
     </div>
     <script>

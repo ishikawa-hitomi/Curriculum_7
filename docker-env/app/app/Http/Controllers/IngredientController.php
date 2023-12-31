@@ -11,7 +11,10 @@ class IngredientController extends Controller
 {
     public function create()
     {
-        return view('ingredient.create');
+        $session=session()->get('ingredient');
+        return view('ingredient.create',[
+            'session'=>$session,
+        ]);
     }
 
     public function store(Request $request)

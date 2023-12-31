@@ -10,6 +10,7 @@ use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\StepController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\InquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::prefix('password_reset')->name('password_reset.')->group(function(){
     Route::get('/edited',[PasswordController::class,'edited'])->name('edited');
 });
 
-Route::get('/faq_view',[DisplayController::class,'faq_view'])->name('faq_view');
+Route::resource('inquiry',InquiryController::class)->only(['index','create','store','edit','update']);
 
 Auth::routes();
 Route::middleware(['auth'])->group(function(){

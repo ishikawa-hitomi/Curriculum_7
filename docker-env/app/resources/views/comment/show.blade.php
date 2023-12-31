@@ -31,7 +31,9 @@
         </div>
       </div>
     @endforeach
-    <a href="{{route('comment_create',['recipe'=>$comments[0]['recipe_id']])}}" class="btn btn-primary btn-sm col-4 mx-auto">コメントを投稿する</a>
+    @can('general')
+      <a href="{{route('comment_create',['recipe'=>$comments[0]['recipe_id']])}}" class="btn btn-primary btn-sm col-4 mx-auto">コメントを投稿する</a>
+    @endcan
   </div>
   <script>
     function delete_alert(e){

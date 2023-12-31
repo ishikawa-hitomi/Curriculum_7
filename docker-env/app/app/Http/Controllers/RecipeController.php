@@ -18,7 +18,7 @@ class RecipeController extends Controller
     //メイン画面、検索結果画面
     public function index(Request $request)
     {
-        $recipes=Recipe::with('user','likes','tag')->whereNull('recipes.deleted_at');
+        $recipes=Recipe::with('user','likes')->whereNull('recipes.deleted_at');
         //新着レシピ6件
         $new_recipes=Recipe::with('user','likes')->whereNull('recipes.deleted_at')->latest()->take(6)->get()->toArray();
         //いいねが多いレシピ6件
@@ -46,7 +46,7 @@ class RecipeController extends Controller
                 $recipes->where('recipes.created_at','<=',$to);
             }
             if(!empty($tag)){
-                $recipes->where('recipes.tag_id','=',$tag);
+                $recipes->where('recipes.tag_id_1','=',$tag)->orwhere('recipes.tag_id_2','=',$tag)->orwhere('recipes.tag_id_3','=',$tag)->orwhere('recipes.tag_id_4','=',$tag)->orwhere('recipes.tag_id_5','=',$tag);
             }
             $tag_name=array_search($tag,array_column($tags,'id'));
             $search_recipes=$recipes->paginate(10);
@@ -70,17 +70,36 @@ class RecipeController extends Controller
     {
         $tag=new Tag;
         $tags=$tag->all()->toArray();
+        if(!empty(session()->exists('recipe'))){
+            $session=session()->get('recipe')->toArray();
+        }else{
+            $session="";
+        }
         return view('recipe.create',[
             'tags'=>$tags,
+            'session'=>$session,
         ]);
     }
     //レシピ新規投稿保存
     public function store(Request $request)
     {
         $recipe=new Recipe;
-        $columns=['display_title','title','time','serve','tag_id','memo'];
+        $columns=['display_title','title','time','serve','memo'];
         foreach($columns as $column){
             $recipe->$column=e($request->$column);
+        }
+        $recipe->tag_id_1=$request['tag_id'][0];
+        if(isset($request['tag_id'][1])){
+            $recipe->tag_id_2=$request['tag_id'][1];
+        }
+        if(isset($request['tag_id'][2])){
+            $recipe->tag_id_3=$request['tag_id'][2];
+        }
+        if(isset($request['tag_id'][3])){
+            $recipe->tag_id_4=$request['tag_id'][3];
+        }
+        if(isset($request['tag_id'][4])){
+            $recipe->tag_id_5=$request['tag_id'][4];
         }
         $recipe->user_id=Auth::user()->id;
         $image_path=$request->file('main_image')->store('public');
@@ -92,15 +111,17 @@ class RecipeController extends Controller
     //投稿詳細画面
     public function show(Recipe $recipe)
     {
-        $recipes=Recipe::where('id',$recipe['id'])->with('tag','user','ingredients','steps','likes')->get()->toArray();
+        $recipes=Recipe::where('id',$recipe['id'])->with('user','ingredients','steps','likes')->get()->toArray();
         $mylikes=Auth::user()->likes->toArray();
         $mylikes=array_column($mylikes,'recipe_id');
         $comments=Comment::where('recipe_id',$recipe['id'])->with('user')->take(4)->get()->toArray();
+        $tags=Tag::select('*')->get()->toArray();
         return view('recipe.show',
         [
             'recipes'=>$recipes,
             'mylikes'=>$mylikes,
             'comments'=>$comments,
+            'tags'=>$tags,
         ]);
     }
 
@@ -108,7 +129,7 @@ class RecipeController extends Controller
     public function edit(Recipe $recipe)
     {
         if($recipe['user_id']==Auth::user()->id){
-        $result=$recipe->with('tag')->where('id','=',$recipe['id'])->get()->toArray();
+        $result=Recipe::where('id',$recipe['id'])->get()->toArray();
         $tag=new Tag;
         $tags=$tag->all()->toArray();
         return view('recipe.edit',[
@@ -122,9 +143,22 @@ class RecipeController extends Controller
     //レシピ編集保存
     public function update(Request $request, Recipe $recipe)
     {
-        $columns=['display_title','title','time','serve','tag_id','memo'];
+        $columns=['display_title','title','time','serve','memo'];
         foreach($columns as $column){
             $recipe->$column=e($request->$column);
+        }
+        $recipe->tag_id_1=$request['tag_id'][0];
+        if(isset($request['tag_id'][1])){
+            $recipe->tag_id_2=$request['tag_id'][1];
+        }
+        if(isset($request['tag_id'][2])){
+            $recipe->tag_id_3=$request['tag_id'][2];
+        }
+        if(isset($request['tag_id'][3])){
+            $recipe->tag_id_4=$request['tag_id'][3];
+        }
+        if(isset($request['tag_id'][4])){
+            $recipe->tag_id_5=$request['tag_id'][4];
         }
         $image_path=$request->file('main_image');
         if(isset($image_path)){
@@ -140,7 +174,7 @@ class RecipeController extends Controller
     public function delete_show(Recipe $recipe)
     {
         if($recipe['user_id']==Auth::user()->id){
-        $recipes=Recipe::where('id','=',$recipe['id'])->with('tag')->get()->toArray();
+        $recipes=Recipe::where('id',$recipe['id'])->get()->toArray();
         return view('recipe.delete_show',[
             'recipes'=>$recipes,
         ]);

@@ -16,9 +16,6 @@ class Recipe extends Model
 
     protected $fillable=['main_image','display_title','title','time','serve','tag_id','memo','del_flg'];
 
-    public function tag(){
-        return $this->belongsTo(Tag::class);
-    }
     public function user(){
         return $this->belongsTo(User::class);
     }

@@ -43,7 +43,7 @@
         <div class="container">
           <ul class="nav justify-content-between">
             <li class="nav-item">
-              <a class="nav-link" href="{{route('faq_view')}}">F&Q</a>
+              <a class="nav-link" href="{{route('inquiry.index')}}">F&Q</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{route('recipe.index')}}">main</a>
@@ -70,7 +70,7 @@
       <div class="left-content col-lg-4 my-2"><!-- カラム（左） -->
         @can('general')
           <div class="navbar-expand-lg bg-body-tertiary">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mx-3">
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"><image class="img-fluid" src="{{asset('メニューの無料アイコン5.png')}}"></span>
               </button>
@@ -83,7 +83,7 @@
               <div class="container-fluid">
                 <form action="{{route('recipe.index')}}" method="GET">
                   <div>
-                    <label class="keyword" class="form-label">キーワード</label>
+                    <label class="keyword" class="form-label">キーワード<small>（表示用タイトル or 料理名）</small></label>
                     <input type="text" name="keyword" class="form-control" value="{{e(request()->input('keyword'))}}">
                     <small>スペースで複数の条件検索可能</small>
                   </div>
@@ -103,12 +103,9 @@
         @endcan
         @can('admin')
           <h5>管理者用画面</h5>
-          <a href="{{route('admin.user_index')}}">
-            <button>ユーザー検索</button>
-          </a>
-          <a href="{{route('admin.recipe_index')}}">
-            <button>投稿検索</button>
-          </a>
+          <a href="{{route('admin.user_index')}}" class="btn btn-primary">ユーザー検索</a>
+          <a href="{{route('admin.recipe_index')}}" class="btn btn-primary">投稿検索</a>
+          <a href="{{route('inquiry.index')}}" class="btn btn-primary">お問い合せ</a>
         @endcan
       </div>
 

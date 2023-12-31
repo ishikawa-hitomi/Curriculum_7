@@ -10,6 +10,7 @@ use App\Models\Step;
 use App\Models\Comment;
 use App\Models\Follow;
 use App\Models\Like;
+use App\Models\Inquiry;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -77,11 +78,13 @@ class AdminController extends Controller
             $users->where('deleted_at','<=',$to);
         }
         $del_users=$users->sortable()->get()->toArray();
+        $inquiry=Inquiry::where('category',2)->get()->toArray();
         return view('admin.del_user_index',
         [
             'del_users'=>$del_users,
             'now'=>$now,
             'pass'=>'00000000',
+            'inquiry'=>$inquiry,
         ]);
     }
 
@@ -168,12 +171,14 @@ class AdminController extends Controller
         if(!empty($to)){
             $recipes->where('recipes.deleted_at','<=',$to);
         }
-        $del_recipes=$recipes->sortable()->get()->toArray();
+        $del_recipes=$recipes->sortable()->with('user')->get()->toArray();
+        $inquiry=Inquiry::where('category',3)->get()->toArray();
         return view('admin.del_recipe_index',
         [
             'del_recipes'=>$del_recipes,
             'now'=>$now,
             'pass'=>'00000000',
+            'inquiry'=>$inquiry,
         ]);
     }
 
@@ -182,7 +187,7 @@ class AdminController extends Controller
         //完全削除
         $recipes=$user->recipes->toArray();
             foreach($recipes as $recipe){
-                Recipe::find($recipe['id'])->delete();
+                Recipe::where('id',$recipe['id'])->delete();
                 Step::where('recipe_id',$recipe['id'])->delete();
                 Ingredient::where('recipe_id',$recipe['id'])->delete();
                 Comment::where('recipe_id',$recipe['id'])->delete();

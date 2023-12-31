@@ -45,6 +45,7 @@
               <th scope="col">@sortablelink('title', '料理名')</th>
               <th scope="col">@sortablelink('deleted_at', '削除日')</th>
               <th scope="col">経過日数</th>
+              <th scope="col">復元申請</th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
@@ -61,6 +62,13 @@
                   <td>{{$recipe['title']}}</td>
                   <td>{{substr($recipe['deleted_at'],0,10)}}</td>
                   <td>{{$now->diffInDays($recipe['deleted_at'])}}日</td>
+                  <td>
+                    @foreach($inquiry as $val)
+                      @if($recipe['user']['name']==$val['user_name']||$recipe['user']['email']==$val['user_email']||$recipe['user']['password']==$val['user_pass']||$recipe['display_title']==$val['recipe_display']||$recipe['title']==$val['recipe_title'])
+                        <strong class="text-danger">済</strong>
+                      @endif
+                    @endforeach
+                  </td>
                   <td><form action="{{route('admin.del_recipe_index')}}" methd="post">@csrf<input type="hidden" name="restore" value="{{$recipe['id']}}"><input type="submit" class="btn btn-primary" value="復元" onClick="restore_prompt();return false;"></form></td>
                   <td><form action="{{route('admin.del_recipe_index')}}" methd="post">@csrf<input type="hidden" name="forceDelete" value="{{$recipe['id']}}"><input type="submit" class="btn btn-danger" value="完全削除" onClick="delete_prompt();return false;"></form></td>
                 </tr>

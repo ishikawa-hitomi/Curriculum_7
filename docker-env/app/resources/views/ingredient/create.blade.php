@@ -7,24 +7,64 @@
         @csrf
         <a onclick="add()" class="btn btn-sm btn-light">+追加</a><!-- 材料の数だけ項目を追加できる -->
         <div id="input_plural">
-          <div class="card-group">
-            <div class="card">
-              <lavel for='name' class="form-label">材料</lavel>
-              <input type='text' name='name[]' class="form-control" value="{{old('name')}}" placeholder="卵" maxlength=15 required>
-              <div class="invalid-feedback">
-                材料の入力は必須です
+          @if(!empty($session))
+            @for($a=0;$a<=count($session['name'])-1;$a++)
+              @if($a == 0)<!-- 最初のループでは削除ボタンを表示しない -->
+                <div class="card-group">
+                  <div class="card">
+                    <lavel for='name' class="form-label">材料</lavel>
+                    <input type='text' name='name[]' class="form-control" value="{{$session['name'][$a]}}" placeholder="卵" maxlength=15 required>
+                    <div class="invalid-feedback">
+                      材料の入力は必須です
+                    </div>
+                  </div>
+                  <div class="card">
+                    <lavel for='quantity' class="form-label">分量</lavel>
+                    <input type='text' name='quantity[]' class="form-control" value="{{$session['quantity'][$a]}}" placeholder="1個" maxlength=10 required>
+                    <div class="invalid-feedback">
+                      分量の入力は必須です
+                    </div>
+                  </div>
+                </div>
+              @else
+                <div class="card-group">
+                  <div class="card">
+                    <input type='text' name='name[]' class="form-control" value="{{$session['name'][$a]}}" placeholder="卵" maxlength=15 required>
+                    <div class="invalid-feedback">
+                      材料の入力は必須です
+                    </div>
+                  </div>
+                  <div class="card">
+                    <input type='text' name='quantity[]' class="form-control" value="{{$session['quantity'][$a]}}" placeholder="1個" maxlength=10 required>
+                    <div class="invalid-feedback">
+                      分量の入力は必須です
+                    </div>
+                  </div>
+                  <input type="button" value="削除" onclick="del(this)"><!-- 項目を削除 -->
+                </div>
+              @endif
+            @endfor
+          @else
+            <div class="card-group">
+              <div class="card">
+                <lavel for='name' class="form-label">材料</lavel>
+                <input type='text' name='name[]' class="form-control" value="{{old('name')}}" placeholder="卵" maxlength=15 required>
+                <div class="invalid-feedback">
+                  材料の入力は必須です
+                </div>
+              </div>
+              <div class="card">
+              <lavel for='quantity' class="form-label">分量</lavel>
+                <input type='text' name='quantity[]' class="form-control" value="{{old('quantity')}}" placeholder="1個" maxlength=10 required>
+                <div class="invalid-feedback">
+                  分量の入力は必須です
+                </div>
               </div>
             </div>
-            <div class="card">
-            <lavel for='quantity' class="form-label">分量</lavel>
-              <input type='text' name='quantity[]' class="form-control" value="{{old('quantity')}}" placeholder="1個" maxlength=10 required>
-              <div class="invalid-feedback">
-                分量の入力は必須です
-              </div>
-            </div>
-          </div>
+          @endif
         </div>
         <input type='submit' class="btn btn-primary">
+        <a href="{{route('recipe.create')}}" class="btn btn-outline-secondary">戻る</a>
       </form>
     </div>
   </div>

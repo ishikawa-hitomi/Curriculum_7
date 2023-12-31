@@ -29,6 +29,7 @@
                   <th scope="col">@sortablelink('name', '名前')</th>
                   <th scope="col">@sortablelink('deleted_at', '削除日')</th>
                   <th scope="col">経過日数</th>
+                  <th scope="col">復元申請</th>
                   <th scope="col"></th>
                   <th scope="col"></th>
                 </tr>
@@ -43,6 +44,13 @@
                     <td>{{$user['name']}}</td>
                     <td>{{substr($user['deleted_at'],0,10)}}</td>
                     <td>{{$now->diffInDays($user['deleted_at'])}}日</td>
+                    <td>
+                      @foreach($inquiry as $val)
+                        @if($user['name']==$val['user_name']||$user['email']==$val['user_email']||$user['password']==$val['user_pass'])
+                        <strong class="text-danger">済</strong>
+                        @endif
+                      @endforeach
+                    </td>
                     <td><form action="{{route('admin.del_user_index')}}" methd="post">@csrf<input type="hidden" name="restore" value="{{$user['id']}}"><input type="submit" class="btn btn-primary" value="復元" onClick="restore_prompt();return false;"></form></td>
                     <td><form action="{{route('admin.del_user_index')}}" methd="post">@csrf<input type="hidden" name="forceDelete" value="{{$user['id']}}"><input type="submit" class="btn btn-danger" value="完全削除" onClick="delete_prompt();return false;"></form></td>
                   </tr>
@@ -50,6 +58,7 @@
               </tbody>
             </table>
             *30日経過したユーザーは自動的に削除
+            <br>*復元申請があったユーザーは手動で復元
       </div>
     </div>
   </div>

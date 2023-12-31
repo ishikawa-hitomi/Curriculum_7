@@ -11,7 +11,6 @@ use App\Models\Ingredient;
 use App\Models\Like;
 use App\Models\Follow;
 use App\Models\Comment;
-use App\Models\Faq;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -69,14 +68,6 @@ class DisplayController extends Controller
         [
             'followers'=>$followers,
             'myfollow'=>$myfollow,
-        ]);
-    }
-
-    //FAQ画面
-    public function faq_view(){
-        $faqs=Faq::select('*')->get()->toArray();
-        return view('faq_view',[
-            'faqs'=>$faqs,
         ]);
     }
 }

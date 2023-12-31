@@ -18,6 +18,9 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -28,7 +31,7 @@
                 <div class="container">
                     <ul class="nav justify-content-between">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('faq_view')}}">F&Q</a>
+                            <a class="nav-link" href="{{route('inquiry.index')}}">F&Q</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('recipe.index')}}">main</a>
@@ -53,7 +56,7 @@
                 <div class="container">
                     <ul class="nav justify-content-between">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('faq_view')}}">F&Q</a>
+                            <a class="nav-link" href="{{route('inquiry.index')}}">F&Q</a>
                         </li>
                         <li class="nav-item d-flex">
                         <a class="nav-link" href="{{ route('login') }}">ログイン</a><a class="nav-link disabled">/</a><a class="nav-link" href="{{ route('register') }}">新規登録</a>
