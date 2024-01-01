@@ -1,79 +1,79 @@
 @extends('layouts.layout')
 @section('content')
-    <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">{{$recipes[0]['display_title']}}</h4>
-                    @foreach($tags as $tag)
-                        @if($recipes[0]['tag_id_1']==$tag['id']||$recipes[0]['tag_id_2']==$tag['id']||$recipes[0]['tag_id_3']==$tag['id']||$recipes[0]['tag_id_4']==$tag['id']||$recipes[0]['tag_id_5']==$tag['id'])
-                        <span class="badge rounded-pill bg-primary">{{$tag['name']}}</span>
-                        @endif
-                    @endforeach
-                <div class="ratio ratio-21x9">
-                    <img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $recipes[0]['main_image']) }}">
+    <div class="card border-light">
+        <div class="card-body">
+            <h4 class="card-title">{{$recipes[0]['display_title']}}</h4>
+                @foreach($tags as $tag)
+                    @if($recipes[0]['tag_id_1']==$tag['id']||$recipes[0]['tag_id_2']==$tag['id']||$recipes[0]['tag_id_3']==$tag['id']||$recipes[0]['tag_id_4']==$tag['id']||$recipes[0]['tag_id_5']==$tag['id'])
+                    <span class="badge rounded-pill bg-primary">{{$tag['name']}}</span>
+                    @endif
+                @endforeach
+            <div class="ratio ratio-21x9">
+                <img class="card-img-top" style="object-fit: cover;" src="{{asset('storage/' . $recipes[0]['main_image']) }}">
+            </div>
+            @if($recipes[0]['user_id']==Auth::user()->id)<!-- 投稿者にのみ編集、削除ボタンを表示 -->
+                <a class="btn btn-outline-primary" role="button" href="{{route('recipe.edit',['recipe'=>$recipes[0]['id']])}}">編集</a>
+                <a class="btn btn-outline-danger" role="button" href="{{route('recipe.delete_show',['recipe'=>$recipes[0]['id']])}}">削除</a>
+            @else
+            <div class="row m-2">
+            <div class="col-4">
+                <div class="d-flex">
+                    <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}" style="max-width:80px;">
+                        <div  class="ratio ratio-1x1">
+                            @if($recipes[0]['user']['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
+                                <img class="rounded-circle" src="{{asset('download20231202123050.png') }}">
+                            @else
+                                <img class="rounded-circle" src="{{asset('storage/' . $recipes[0]['user']['icon']) }}">
+                            @endif
+                        </div>
+                        <p class="my-auto">{{$recipes[0]['user']['name']}}</p>
+                    </a>
                 </div>
-                @if($recipes[0]['user_id']==Auth::user()->id)<!-- 投稿者にのみ編集、削除ボタンを表示 -->
-                    <a class="btn btn-outline-primary" role="button" href="{{route('recipe.edit',['recipe'=>$recipes[0]['id']])}}">編集</a>
-                    <a class="btn btn-outline-primary" role="button" href="{{route('recipe.delete_show',['recipe'=>$recipes[0]['id']])}}">削除</a>
-                @else
-                <div class="row m-2">
-                <div class="col-4">
-                    <div class="d-flex">
-                        <a href="{{route('user.show',['user'=>$recipes[0]['user_id']])}}" style="max-width:80px;">
-                            <div  class="ratio ratio-1x1">
-                                @if($recipes[0]['user']['icon']===null)<!-- もしアイコンが設定されていなければデフォルトのアイコンを表示 -->
-                                    <img class="rounded-circle" src="{{asset('download20231202123050.png') }}">
-                                @else
-                                    <img class="rounded-circle" src="{{asset('storage/' . $recipes[0]['user']['icon']) }}">
-                                @endif
-                            </div>
-                            <p class="my-auto">{{$recipes[0]['user']['name']}}</p>
-                        </a>
-                    </div>
-                    </div>
-                    <div class="col-8 my-auto d-flex justify-content-end">
-                    @can('general')
-                        @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
-                        <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-danger btn-sm">
-                            お気に入り解除
-                            <span class="badge" style="max-width:40px;"><img src="{{asset('ハートのアイコン素材 1.png') }}" style="object-fit: cover;" class="img-fluid"></span>{{count($recipes[0]['likes'])}}
-                        </a>
-                        @else
-                        <a href="{{ route('add_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-primary btn-sm">
-                            お気に入り登録
-                            <span class="badge" style="max-width:40px;"><img src="{{asset('ハートのアイコン素材 1 (1).png') }}" style="object-fit: cover;" class="img-fluid"></span>{{count($recipes[0]['likes'])}}
-                        </a>
-                        @endif
-                    @endcan
-                    </div>
-                    </div>
-                @endif
-                <div class="card-group">
-                    <div class="card">
-                        <div class="card-body">
-                            <span class="badge bg-primary">投稿日</span>
-                            <span>{{substr($recipes[0]['created_at'],0,10)}}</span>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <span class="badge bg-primary">調理時間</span>
-                            <span>{{$recipes[0]['time']}}分</span>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <span class="badge bg-primary">人数目安</span>
-                            <span>{{$recipes[0]['serve']}}人分</span>
-                        </div>
+                </div>
+                <div class="col-8 my-auto d-flex justify-content-end">
+                @can('general')
+                    @if(in_array($recipes[0]['id'],$mylikes))<!-- いいね機能 -->
+                    <a href="{{ route('remove_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-danger btn-sm">
+                        お気に入り解除
+                        <span class="badge" style="max-width:40px;"><img src="{{asset('ハートのアイコン素材 1.png') }}" style="object-fit: cover;" class="img-fluid"></span>{{count($recipes[0]['likes'])}}
+                    </a>
+                    @else
+                    <a href="{{ route('add_like',['recipe'=>$recipes[0]['id']])}}" class="btn btn-outline-primary btn-sm">
+                        お気に入り登録
+                        <span class="badge" style="max-width:40px;"><img src="{{asset('ハートのアイコン素材 1 (1).png') }}" style="object-fit: cover;" class="img-fluid"></span>{{count($recipes[0]['likes'])}}
+                    </a>
+                    @endif
+                @endcan
+                </div>
+            </div>
+            @endif
+            <div class="card-group">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="badge bg-primary">投稿日</span>
+                        <span>{{substr($recipes[0]['created_at'],0,10)}}</span>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-title">ひとことメモ</div>
                     <div class="card-body">
-                        <p>{{$recipes[0]['memo']}}</p>
+                        <span class="badge bg-primary">調理時間</span>
+                        <span>{{$recipes[0]['time']}}分</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <span class="badge bg-primary">人数目安</span>
+                        <span>{{$recipes[0]['serve']}}人分</span>
                     </div>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-title">ひとことメモ</div>
+                <div class="card-body">
+                    <p>{{$recipes[0]['memo']}}</p>
+                </div>
+            </div>
+        </div>
         <div class="card-body">
             <table class="table table-sm">
                 <thead>

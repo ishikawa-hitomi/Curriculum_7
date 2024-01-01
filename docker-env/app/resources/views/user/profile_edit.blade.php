@@ -1,7 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+  {{Breadcrumbs::render('user.profile_edit',$users[0]['id'])}}
   @foreach($users as $user)
-  <div class="card">
+  <div class="cardb border-light">
     <h4 class="card-title">プロフィール情報変更</h4>
     <div class="card-body">
       <form action="{{route('user.profile_update',['user'=>$user['id']])}}" method="post" enctype="multipart/form-data">

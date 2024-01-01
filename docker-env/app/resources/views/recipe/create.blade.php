@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
+  {{Breadcrumbs::render('recipe.create')}}
+  <div class="card border-light">
     <h4 class="card-title">新規投稿</h4>
     <div class="card-body">
       <form action="{{route('recipe.store')}}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -45,7 +46,7 @@
           <div class="row row-cols-4">
             @foreach($tags as $tag)
               <div class="col">
-                <input type="checkbox" name="tag_id[]" value="{{$tag['id']}}" @if(!empty($session['tag_id'])&&$session['tag_id']==$tag['id']) checked @elseif(!empty($session['tag_id'])&&$session['tag_id']!=$tag['id']) disabled @elseif(empty($session['tag_id'])) required @endif>{{$tag['name']}}
+                <input type="checkbox" name="tag_id[]" value="{{$tag['id']}}" @if(!empty($session['tag_id_1'])&&$session['tag_id_1']==$tag['id']||!empty($session['tag_id_2'])&&$session['tag_id_2']==$tag['id']||!empty($session['tag_id_3'])&&$session['tag_id_3']==$tag['id']||!empty($session['tag_id_4'])&&$session['tag_id_4']==$tag['id']||!empty($session['tag_id_5'])&&$session['tag_id_5']==$tag['id']) checked @elseif(empty($session['tag_id'])) required @endif>{{$tag['name']}}
               </div>
             @endforeach
           </div>

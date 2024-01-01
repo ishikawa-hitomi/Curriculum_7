@@ -1,7 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+  {{Breadcrumbs::render('user.delete_show',$users[0]['id'])}}
   @foreach($users as $user)
-    <div class="card">
+    <div class="card border-light">
       <div class="alert alert-danger" role="alert">
         アカウントに関する全ての情報が削除されます。<br>削除する場合はパスワードを入力し、[削除する]ボタンを押してください。
       </div>

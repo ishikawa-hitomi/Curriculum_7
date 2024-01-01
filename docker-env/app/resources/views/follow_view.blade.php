@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
   @foreach($follows as $user)
-    <div class="card mx-auto"  style="max-width:600px;">
+    <div class="card mx-auto  border-light"  style="max-width:600px;">
       <div class="row m-2">
         <div class="col-2" style="max-width:100px;">
           <a href="{{route('user.show',['user'=>$user['following_id']])}}" class="ratio ratio-1x1">

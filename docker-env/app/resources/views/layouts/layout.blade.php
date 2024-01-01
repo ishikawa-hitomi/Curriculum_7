@@ -39,17 +39,17 @@
 <body>
   <header>
     @if(Auth::check())
-    <nav class="nav">
+    <nav class="nav bg-light">
         <div class="container">
           <ul class="nav justify-content-between">
             <li class="nav-item">
-              <a class="nav-link" href="{{route('inquiry.index')}}">F&Q</a>
+              <a class="nav-link" href="{{route('inquiry.index')}}">Q&A</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{route('recipe.index')}}">main</a>
             </li>
-            <li class="nav-item d-flex">
-              <a class="nav-link disabled">{{Auth::user()->name}}</a><a class="nav-link disabled">/</a><a class="nav-link" href="#" id="logout">ログアウト</a>
+            <li class="nav-item d-flex my-auto">
+              <a class="nav-link disabled p-0">{{Auth::user()->name}}</a><a class="nav-link disabled p-0">&emsp;/&emsp;</a><a class="nav-link p-0" href="#" id="logout">ログアウト</a>
             </li>
           </ul>
         </div>
@@ -66,8 +66,8 @@
     @endif
   </header>
   <div class="main container-fluid">
-    <div class="row">
-      <div class="left-content col-lg-4 my-2"><!-- カラム（左） -->
+    <div class="row mb-5">
+      <div class="left-content col-lg-4"><!-- カラム（左） -->
         @can('general')
           <div class="navbar-expand-lg bg-body-tertiary">
             <div class="d-flex justify-content-between mx-3">
@@ -99,7 +99,7 @@
                 </form>
               </div>
             </div>
-        </div>
+          </div>
         @endcan
         @can('admin')
           <h5>管理者用画面</h5>
@@ -110,6 +110,7 @@
       </div>
 
       <div class="main-content col-lg-6"><!-- カラム（メイン） -->
+          @yield('bread')
           @yield('content')
       </div>
 

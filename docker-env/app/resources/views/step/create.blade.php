@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
+  {{Breadcrumbs::render('step.create')}}
+  <div class="card border-light">
     <h4 class="card-title">手順登録</h4>
     <div class="card-body">
       <form action="{{route('step.store')}}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">

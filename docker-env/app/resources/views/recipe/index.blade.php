@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
   @if(!empty($keyword)||!empty($from)||!empty($to)||!empty($tag))
-    <div class="card">
+    <div class="card border-light">
       <h4 class="card-title text-center">@if(!empty($keyword))"{{$keyword}}" @endif @if(!empty($from))"{{$from}}" @endif @if(!empty($to))"{{$to}}" @endif @if(!empty($tag))"{{$tags[$tag_name]['name']}}" @endifの検索結果</h4>
       <div class="card-body">
         @foreach($search_recipes as $recipe)

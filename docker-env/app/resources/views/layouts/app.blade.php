@@ -31,7 +31,7 @@
                 <div class="container">
                     <ul class="nav justify-content-between">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('inquiry.index')}}">F&Q</a>
+                            <a class="nav-link" href="{{route('inquiry.index')}}">Q&A</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('recipe.index')}}">main</a>

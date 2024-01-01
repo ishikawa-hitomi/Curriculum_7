@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
-<div class="card">
+  {{Breadcrumbs::render('comment.show',$comments[0]['recipe_id'])}}
+<div class="card border-light">
     @foreach($comments as $comment)
       <div class="card-body">
         <div class="row">
@@ -13,7 +14,11 @@
               @endif
             </div>
           </div>
+          @if($comment['user'][0]['id']==$user_id)
+          <div class="col-10 border border-dark rounded-3 p-2" style="background-color: #33FF00;">
+          @else
           <div class="col-10 border border-dark rounded-3 p-2">
+          @endif
             <p>{{$comment['comment']}}</p>
             <small>from&nbsp;{{$comment['user'][0]['name']}}</small>
             <div class="d-flex justify-content-end">
@@ -31,6 +36,9 @@
         </div>
       </div>
     @endforeach
+      <div class="d-flex justify-content-center">
+        {{ $comments->onEachSide(2)->render() }}
+      </div>
     @can('general')
       <a href="{{route('comment_create',['recipe'=>$comments[0]['recipe_id']])}}" class="btn btn-primary btn-sm col-4 mx-auto">コメントを投稿する</a>
     @endcan

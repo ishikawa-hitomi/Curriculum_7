@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
+  <div class="card border-light">
     <h4 class="card-title">タグ一覧</h4>
     <div>
       @foreach($tags as $tag)

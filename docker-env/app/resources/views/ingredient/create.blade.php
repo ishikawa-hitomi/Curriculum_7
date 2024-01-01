@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
+  {{Breadcrumbs::render('ingredient.create')}}
+  <div class="card border-light">
     <h4 class="card-title">材料・分量登録</h4>
     <div class="card-body">
       <form action="{{route('ingredient.store')}}" method="post" class="needs-validation" novalidate>

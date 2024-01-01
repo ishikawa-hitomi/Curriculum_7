@@ -4,6 +4,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card border-light">
+          {{Breadcrumbs::render('inquiry.create')}}
           <ul class="nav">
             <li class="nav-item"><a class="nav-link" href="{{route('inquiry.index')}}">Q&A</a></li>
             <li class="nav-item"><a class="nav-link disabled">お問い合わせ</a></li>

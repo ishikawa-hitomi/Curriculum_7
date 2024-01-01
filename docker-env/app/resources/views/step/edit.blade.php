@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
+  {{Breadcrumbs::render('step.edit',$recipeId)}}
+  <div class="card border-light">
     <h4 class="card-title">手順編集</h4>
     <div class="card-body">
       <form action="{{route('step.update',['recipe'=>$recipeId])}}" method="post" class="was-validated" enctype="multipart/form-data">

@@ -28,10 +28,12 @@ class CommentController extends Controller
 
     public function show(Recipe $recipe)
     {
-        $comments=Comment::where('recipe_id',$recipe['id'])->with('user')->get()->toArray();
+        $comments=Comment::where('recipe_id',$recipe['id'])->with('user')->paginate(10);
+        $user_id=$recipe['user']['id'];
         return view('comment.show',
         [
             'comments'=>$comments,
+            'user_id'=>$user_id,
         ]);
     }
 

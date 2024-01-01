@@ -1,7 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+  {{Breadcrumbs::render('recipe.delete_show',$recipes[0]['id'])}}
   @foreach($recipes as $recipe)
-  <div class="card">
+  <div class="card border-light">
     <div class="card-body">
       <h4 class="card-title">{{$recipe['display_title']}}</h4>
       <div class="ratio ratio-21x9">

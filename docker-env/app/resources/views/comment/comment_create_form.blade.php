@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
-  <div class="card">
+  {{Breadcrumbs::render('comment_create',$recipeId)}}
+  <div class="card border-light">
     <h4 class="card-title">コメント投稿</h4>
   </div>
   <div>

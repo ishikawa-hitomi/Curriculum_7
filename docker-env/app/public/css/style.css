@@ -20,32 +20,26 @@
     left:-30!important;
 }
 
+.main > .row{
+    margin-top: 40px;
+}
+
 @media screen and (min-width:993px) {
-    .left-content{
-        height: 100vh;
+    header{
+        position: fixed;
+        top: 0;
+        z-index: 100;
+        background-color: white;
+        width: 100vw;
+    }
+    .navbar-expand-lg{
+        position: fixed;
+        width: 33vw;
     }
 }
 
 @media screen and (max-width:992px) {
-    .left-content{
-        height: auto;
-    }
-}
-
-@media screen and (max-width:576px) {
-    p{
-        font-size:small;
-    }
-    h4{
-        font-size:large;
-    }
-    h5{
-        font-size: medium;
-    }
-    a{
-        font-size:small;
-    }
-    .left-content{
-        height: auto;
+    .main-content{
+        margin-top: 30px;
     }
 }

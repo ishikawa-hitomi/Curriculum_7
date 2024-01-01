@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
   @foreach($comments as $comment)
-    <div class="card">
+    <div class="card border-light">
       <form action="{{route('comment.update',['comment'=>$comment['id']])}}" method="POST">
         @csrf
         @method('PUT')
