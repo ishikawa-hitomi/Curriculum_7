@@ -14,7 +14,7 @@
               <div class="card-group">
                 <div class="card">
                   <lavel for='sub_image' class="form-label">サブ画像</lavel>
-                  <input type='file' name='sub_image[]' class="form-control" required accept="image/*" id="fileInput">
+                  <input type='file' name='sub_image[]' class="form-control fileInput" required accept="image/*">
                   <div class="invalid-feedback">
                     サブ画像の入力は必須です
                   </div>
@@ -30,7 +30,7 @@
             @else
               <div class="card-group">
                 <div class="card">
-                  <input type='file' name='sub_image[]' class="form-control" required accept="image/*" id="fileInput">
+                  <input type='file' name='sub_image[]' class="form-control fileInput" required accept="image/*">
                   <div class="invalid-feedback">
                     サブ画像の入力は必須です
                   </div>
@@ -70,8 +70,10 @@
       var input1 = document.createElement('INPUT');
       input1.setAttribute("type", "file");
       input1.classList.add('form-control');
+      input1.classList.add('fileInput');
       input1.setAttribute('name', 'sub_image[]');
       input1.setAttribute('required', true);
+      input1.setAttribute('accept', 'image/*');
       div1.appendChild(input1);
 
       let requred1 = document.createElement('DIV');
@@ -108,16 +110,36 @@
       o.parentNode.remove();
     }
 
-    //ファイルサイズのバリデーション
-    $(document).ready(function(){
-    $('#fileInput').change(function(){
-      var fileSize=this.files[0].size;
-      var maxSizeInBytes=2097152;
-      if(fileSize>maxSizeInBytes){
-        alert('2MB以内の画像を選択してください');
-        $(this).val('');
-      }
-    });
-    });
+    (() => {
+    'use strict'
+
+    // Bootstrapカスタム検証スタイルを適用してすべてのフォームを取得
+    const forms = document.querySelectorAll('.was-validated')
+
+    // ループして帰順を防ぐ
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        var inputs = document.getElementsByClassName('fileInput');
+        for (var j = 0; j < inputs.length; j++) {
+            var files = inputs[j].files;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var maxSizeInBytes = 2097152;
+                if (file.size > maxSizeInBytes) {
+                  alert('2MB以内の画像を選択してください');
+                    // フォームの送信を中止
+                    event.preventDefault();
+                    // ファイル選択をクリアして入力フィールドの値を空にする
+                    inputs[j].value = '';
+                }
+            }
+        }
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+      }, false)
+    })
+  })()
   </script>
 @endsection

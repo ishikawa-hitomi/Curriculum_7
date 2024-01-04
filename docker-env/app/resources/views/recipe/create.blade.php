@@ -46,7 +46,16 @@
           <div class="row row-cols-4">
             @foreach($tags as $tag)
               <div class="col">
-                <input type="checkbox" name="tag_id[]" value="{{$tag['id']}}" @if(!empty($session['tag_id_1'])&&$session['tag_id_1']==$tag['id']||!empty($session['tag_id_2'])&&$session['tag_id_2']==$tag['id']||!empty($session['tag_id_3'])&&$session['tag_id_3']==$tag['id']||!empty($session['tag_id_4'])&&$session['tag_id_4']==$tag['id']||!empty($session['tag_id_5'])&&$session['tag_id_5']==$tag['id']) checked @elseif(empty($session['tag_id'])) required @endif>{{$tag['name']}}
+                <input type="checkbox" name="tag_id[]" value="{{$tag['id']}}"
+                @if(!empty($session['tag_id_1']))
+                  @if($session['tag_id_1']==$tag['id']||!empty($session['tag_id_2'])&&$session['tag_id_2']==$tag['id']||!empty($session['tag_id_3'])&&$session['tag_id_3']==$tag['id']||!empty($session['tag_id_4'])&&$session['tag_id_4']==$tag['id']||!empty($session['tag_id_5'])&&$session['tag_id_5']==$tag['id'])
+                    checked
+                  @else
+                  @endif
+                @else
+                  required
+                @endif
+                >{{$tag['name']}}
               </div>
             @endforeach
           </div>

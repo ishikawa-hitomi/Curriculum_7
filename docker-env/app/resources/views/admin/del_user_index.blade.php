@@ -46,7 +46,7 @@
                     <td>{{$now->diffInDays($user['deleted_at'])}}日</td>
                     <td>
                       @foreach($inquiry as $val)
-                        @if($user['name']==$val['user_name']||$user['email']==$val['user_email']||$user['password']==$val['user_pass'])
+                        @if($user['name']==$val['user_name']&&$user['email']==$val['user_email']||$user['password']==$val['user_pass'])
                         <strong class="text-danger">済</strong>
                         @endif
                       @endforeach

@@ -64,7 +64,8 @@
                   <td>{{$now->diffInDays($recipe['deleted_at'])}}日</td>
                   <td>
                     @foreach($inquiry as $val)
-                      @if($recipe['user']['name']==$val['user_name']||$recipe['user']['email']==$val['user_email']||$recipe['user']['password']==$val['user_pass']||$recipe['display_title']==$val['recipe_display']||$recipe['title']==$val['recipe_title'])
+                      @if($recipe['user']==null)
+                      @elseif($recipe['user']['name']==$val['user_name']&&$recipe['user']['email']==$val['user_email']&&$recipe['user']['password']==$val['user_pass']&&$recipe['display_title']==$val['recipe_display']||$recipe['title']==$val['recipe_title'])
                         <strong class="text-danger">済</strong>
                       @endif
                     @endforeach

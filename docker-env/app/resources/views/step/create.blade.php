@@ -47,7 +47,7 @@
       var input1 = document.createElement('INPUT');
       input1.setAttribute("type", "file");
       input1.classList.add('form-control');
-      input1.classList.add('fileInput');
+      input1.classList.add("fileInput");
       input1.setAttribute('name', 'sub_image[]');
       input1.setAttribute('required', true);
       input1.setAttribute('accept', 'image/*');
@@ -96,18 +96,25 @@
     // ループして帰順を防ぐ
     Array.from(forms).forEach(form => {
       form.addEventListener('submit', event => {
+        var inputs = document.getElementsByClassName('fileInput');
+        for (var j = 0; j < inputs.length; j++) {
+            var files = inputs[j].files;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var maxSizeInBytes = 2097152;
+                if (file.size > maxSizeInBytes) {
+                  alert('2MB以内の画像を選択してください');
+                    // フォームの送信を中止
+                    event.preventDefault();
+                    // ファイル選択をクリアして入力フィールドの値を空にする
+                    inputs[j].value = '';
+                }
+            }
+        }
         if (!form.checkValidity()) {
           event.preventDefault()
           event.stopPropagation()
         }
-        $('.fileInput').each(function(){
-          var fileSize=this.files[0].size;
-          var maxSizeInBytes=2097152;
-          if(fileSize>maxSizeInBytes){
-            alert('2MB以内の画像を選択してください');
-            $(this).val('');
-          }
-        });
         form.classList.add('was-validated')
       }, false)
     })

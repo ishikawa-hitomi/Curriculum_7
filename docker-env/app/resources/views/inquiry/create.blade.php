@@ -38,31 +38,19 @@
                       </div>
                       <div id="2">
                         <div>
-                          <label for="re_user_name">ユーザー名</label>
+                          <label for="user_name">ユーザー名</label>
                           <input type="text" name="user_name" class="form-control i2" required>
                         </div>
                         <div>
-                          <label for="re_user_email">メールアドレス</label>
+                          <label for="user_email">メールアドレス</label>
                           <input type="mail" name="user_email" class="form-control i2" required>
                         </div>
                         <div>
-                          <label for="re_user_pass">パスワード</label>
+                          <label for="user_pass">パスワード</label>
                           <input type="password" name="user_pass" class="form-control i2" required>
                         </div>
                       </div>
                       <div id="3">
-                        <div>
-                          <label for="re_user_name">ユーザー名</label>
-                          <input type="text" name="user_name" class="form-control i3" required>
-                        </div>
-                        <div>
-                          <label for="re_user_email">メールアドレス</label>
-                          <input type="mail" name="user_email" class="form-control i3" required>
-                        </div>
-                        <div>
-                          <label for="re_user_pass">パスワード</label>
-                          <input type="password" name="user_pass" class="form-control i3" required>
-                        </div>
                         <div>
                           <label for="re_user_name">表示用タイトル
                           </label>
@@ -99,7 +87,7 @@
           $('#1').hide();
           $('.i1').prop("required",false);
         }
-        if ($('#select option:selected').val() == '2') {
+        if ($('#select option:selected').val() == '2'||'3') {
           $('#2').show();
           $('.i2').prop("required",true);
         } else {
